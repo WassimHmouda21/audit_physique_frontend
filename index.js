@@ -1,10 +1,8 @@
-// index.js
 import { AppRegistry } from 'react-native';
-import YourApp from './YourApp';
+import Navigation from './Navigation';
 import { name as appName } from './app.json';
 
-// Register the main App component
-AppRegistry.registerComponent(appName, () => YourApp);
+AppRegistry.registerComponent(appName, () => Navigation);
 
-// Run the app
+// Use runApplication with the correct component
 AppRegistry.runApplication(appName, { rootTag: 11 });
