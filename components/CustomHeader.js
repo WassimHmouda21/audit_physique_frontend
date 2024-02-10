@@ -10,8 +10,8 @@ const CustomHeader = () => {
     navigation.navigate('Home');
   };
 
-  const handleNavigateToSearch = () => {
-    navigation.navigate('Search');
+  const handleNavigateToSurvey = () => {
+    navigation.navigate('Survey');
   };
 
   const handleNavigateToAlbum = () => {
@@ -27,8 +27,8 @@ const CustomHeader = () => {
       <TouchableOpacity onPress={handleNavigateToHome} style={styles.button}>
         <Text style={styles.buttonText}>Home</Text>
       </TouchableOpacity>
-      <TouchableOpacity onPress={handleNavigateToSearch} style={styles.button}>
-        <Text style={styles.buttonText}>Search</Text>
+      <TouchableOpacity onPress={handleNavigateToSurvey} style={styles.button}>
+        <Text style={styles.buttonText}>Survey</Text>
       </TouchableOpacity>
       <TouchableOpacity onPress={handleNavigateToAlbum} style={styles.button}>
         <Text style={styles.buttonText}>Album</Text>

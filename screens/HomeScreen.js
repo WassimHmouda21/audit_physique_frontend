@@ -1,72 +1,86 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, SafeAreaView, FlatList, StatusBar, Image } from 'react-native';
-import CustomHeader from '../components/CustomHeader';
-import axios from 'axios';
+import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import CustomHeader from '../components/CustomHeader'; // Update the path
 
 const HomeScreen = () => {
-  const [customers, setCustomers] = useState([]);
+  const [date, setDate] = useState(new Date());
+  const [undoneSurveys, setUndoneSurveys] = useState(3); // Example value
 
-  useEffect(() => {
-    async function fetchCustomers() {
-      try {
-        const response = await axios.get('http://10.0.2.2:8000/api/customerpage');
-        console.log(response.data);
-        setCustomers(response.data.customers); // Set customers data from the response
-      } catch (error) {
-        console.log(error);
-      }
-    }
-  
-    fetchCustomers();
-  }, []);
-  
+  const handleMissingInspectionsPress = () => {
+    // Implement logic for handling Missing Inspections button press
+  };
 
   return (
     <View style={styles.container}>
       <CustomHeader />
-      {customers && customers.length > 0 ? (
-        <FlatList
-          data={customers}
-          renderItem={({ item }) => (
-            <View style={styles.item}>
-              <Text>
-                {item.SN}, {item.LN}, {item.Description}, {item.SecteurActivite}, {item.Categorie},
-                {item.Site_Web}, {item.Adresse_mail}, {item.Organigramme}, {item.Network_Design}, {item.Type}
-              </Text>
-              {item.Logo ? (
-                <Image
-                  source={{ uri: `http://10.0.2.2:8000/assets/${item.Logo}` }}
-                  style={{ width: 100, height: 100 }}
-                  onLoadStart={() => console.log('Image loading started')}
-                  onLoadEnd={() => console.log('Image loading ended')}
-                  onError={(error) => console.log('Image loading error:', error)}
-                />
-              ) : (
-                <Text>No logo available</Text>
-              )}
-            </View>
-          )}
-          keyExtractor={(item) => item.id.toString()}
-        />
-      ) : (
-        <Text>No data available</Text>
-      )}
-      <StatusBar style="auto" />
+      <View style={styles.content}>
+        <View style={styles.card}>
+          <Image source={require('../assets/images/image_date_picker.png')} style={styles.logo} />
+          <View style={styles.textContainer}>
+            <Text style={styles.dateText}>{date.toDateString()}</Text>
+            <Text style={styles.infoText}>Hello, you have {undoneSurveys} undone surveys</Text>
+          </View>
+          <TouchableOpacity style={styles.button} onPress={handleMissingInspectionsPress}>
+            <Text style={styles.buttonText}>Missing inspections</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
     </View>
   );
-      };
-
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: '#f0f0f0',
   },
-  item: {
-    padding: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
+  content: {
+    flex: 1,
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    paddingTop: 20, // Adjust as needed
+  },
+  card: {
+    backgroundColor: '#ffffff',
+    borderRadius: 10,
+    padding: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    elevation: 3,
+    shadowColor: '#000000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+  },
+  logo: {
+    width: 50,
+    height: 50,
+    marginRight: 10,
+  },
+  textContainer: {
+    flex: 1,
+  },
+  dateText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 5,
+  },
+  infoText: {
+    fontSize: 16,
+  },
+  button: {
+    backgroundColor: '#007bff',
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    borderRadius: 5,
+  },
+  buttonText: {
+    color: '#ffffff',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 
