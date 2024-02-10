@@ -12,20 +12,28 @@ const HomeScreen = () => {
 
   return (
     <View style={styles.container}>
-      <CustomHeader />
-      <View style={styles.content}>
-        <View style={styles.card}>
-          <Image source={require('../assets/images/image_date_picker.png')} style={styles.logo} />
-          <View style={styles.textContainer}>
-            <Text style={styles.dateText}>{date.toDateString()}</Text>
-            <Text style={styles.infoText}>Hello, you have {undoneSurveys} undone surveys</Text>
-          </View>
-          <TouchableOpacity style={styles.button} onPress={handleMissingInspectionsPress}>
-            <Text style={styles.buttonText}>Missing inspections</Text>
-          </TouchableOpacity>
-        </View>
+  <CustomHeader />
+  <View style={styles.content}>
+    <View style={styles.card}>
+      <Image source={require('../assets/images/image_date_picker.png')} style={styles.logo} />
+      <View style={styles.textContainer}>
+        <Text style={styles.dateText}>{date.toDateString()}</Text>
+        <Text style={styles.infoText}>Hello, you have {undoneSurveys} undone surveys</Text>
       </View>
+      <TouchableOpacity style={styles.button} onPress={handleMissingInspectionsPress}>
+        <Text style={styles.buttonText}>Missing inspections</Text>
+      </TouchableOpacity>
     </View>
+  </View>
+  <View style={[styles.bottomContent, { marginTop: 0, justifyContent: 'center' }]}>
+    <Text style={[styles.bottomText, { fontSize: 24, color: '#007bff', fontStyle: 'italic' }]}>
+      Join a survey that meets our expectations!
+    </Text>
+    <Image source={require('../assets/images/illustration_survey.jpg')} style={{ width: 350, height: 300 }} />
+  </View>
+  <View style={styles.blankSpace} />
+</View>
+
   );
 };
 
@@ -81,6 +89,26 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  bottomContent: {
+    flex: 1,
+    justifyContent: 'space-around',
+    alignItems: 'stretch',
+    paddingHorizontal: 20,
+    marginTop: 20, // Adjust as needed
+  },
+  bottomText: {
+    fontSize: 18,
+    marginBottom: 10,
+    textAlign: 'center',
+  },
+  bottomImage: {
+    width: 200,
+    height: 200,
+    resizeMode: 'contain',
+  },
+  blankSpace: {
+    flex: 0.5,
   },
 });
 
