@@ -6,6 +6,7 @@ import HomeScreen from './screens/HomeScreen';
 import SurveyScreen from './screens/SurveyScreen';
 import AlbumScreen from './screens/AlbumScreen';
 import ProgressionScreen from './screens/ProgressionScreen';
+import SitesScreen from './screens/SitesScreen';
 
 const Stack = createStackNavigator();
 
@@ -17,6 +18,7 @@ const Navigation = () => {
         <Stack.Screen name="Survey" component={SurveyScreen} />
         <Stack.Screen name="Album" component={AlbumScreen} />
         <Stack.Screen name="Progression" component={ProgressionScreen} />
+        <Stack.Screen name="SitesScreen" component={SitesScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
