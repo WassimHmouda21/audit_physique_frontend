@@ -4,8 +4,8 @@ import CustomHeader from '../components/CustomHeader';
 import axios from 'axios';
 
 class Customer_site {
-  constructor(ID, Numero_site, Structure, Lieu, Customer_Id) {
-    this.ID = ID;
+  constructor(id, Numero_site, Structure, Lieu, Customer_Id) {
+    this.id = id;
     this.Numero_site = Numero_site;
     this.Structure = Structure;
     this.Lieu = Lieu;
@@ -24,7 +24,7 @@ const SitesScreen = ({ route, navigation }) => {
         console.log(response.data);
         if (response.data.status === 200) {
           // Map the response data to instances of Customer_site class
-          const sites = response.data.customer_sites.map(site => new Customer_site(site.ID, site.Numero_site, site.Structure, site.Lieu, site.Customer_Id));
+          const sites = response.data.customer_sites.map(site => new Customer_site(site.id, site.Numero_site, site.Structure, site.Lieu, site.Customer_Id));
           setCustomerSites(sites);
         } else {
           console.log(response.data.message); // Log error message if status is not 200
@@ -37,19 +37,28 @@ const SitesScreen = ({ route, navigation }) => {
     fetchCustomerSites();
   }, [customerId]); // Include customerId in dependency array to re-fetch data when it changes
 
-  const handleCardPress = (site) => {
-    // Navigate to another screen with site details
-    navigation.navigate('SiteDetailsScreen', { site });
+  const handleCardPress = (customerSite) => {
+    // Log the customerSite object to inspect its structure and properties
+    console.log("Customer Site:", customerSite);
+    
+    // Navigate to CategoryScreen and pass the site ID as a parameter
+    console.log("Navigating to CategoryScreen with site ID:", customerSite.id);
+    navigation.navigate('CategoryScreen', { siteId: customerSite.id });
   };
+  
 
   return (
     <View style={styles.container}>
-        <Text style={styles.infoTextet}>Audit de Conformité ISO 27002 / Rapport d’Audit de Vérification des Aspects de Sécurité Physique</Text>
-        <Text style={styles.infoTexte}>Référence normative : ISO 27002 (Chapitre A.11)
-Méthode : MEHARI 2017 (Sécurité des Sites et locaux informatiques)
-</Text>
-      <Text style={styles.infoText}>Select Customer Site:</Text>
       <ScrollView style={styles.scrollView}>
+        <View style={styles.card}>
+          <View style={styles.cardContent}>
+            <Text style={styles.infoTextet}>Audit de Conformité ISO 27002 / Rapport d’Audit de Vérification des Aspects de Sécurité Physique</Text>
+            <Text style={styles.infoTexte}>Référence normative : ISO 27002 (Chapitre A.11)
+              Méthode : MEHARI 2017 (Sécurité des Sites et locaux informatiques)
+            </Text>
+          </View>
+        </View>
+        <Text style={styles.infoText}>Select Customer Site:</Text>
         {customerSites.length > 0 ? (
           customerSites.map((site, index) => (
             <TouchableOpacity key={index} style={styles.card} onPress={() => handleCardPress(site)}>
@@ -102,21 +111,19 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: 'green',
   },
-  infoTexte:
-  {
+  infoTexte: {
     fontSize: 17,
     fontWeight: '500',
     marginBottom: 10,
     textAlign: 'center',
     color: 'blue',
   },
-  infoTextet:
-  {
+  infoTextet: {
     fontSize: 19,
     fontWeight: 'bold',
     marginBottom: 10,
     textAlign: 'center',
-    color: 'blue',
+    color: '#007bff',
   },
   card: {
     flexDirection: 'row',
