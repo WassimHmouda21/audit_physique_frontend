@@ -17,8 +17,14 @@ const CategoryScreen = ({ route }) => {
     }
   }
 
-  const handleCategoryPress = (categoryId) => {
-    navigation.navigate('QuestionScreen', { categoryId });
+  const handleCategoryPress = (categorie) => {
+   
+
+    console.log("Categorie :", categorie);
+    
+    // Navigate to CategoryScreen and pass the site ID as a parameter
+    console.log("Navigating to QuestionScreen with categorie ID:", categorie.id);
+    navigation.navigate('QuestionScreen', { categoryId: categorie.id });
   };
 
   useEffect(() => {
@@ -27,8 +33,9 @@ const CategoryScreen = ({ route }) => {
         // Fetch categories
         const responseCategories = await axios.get('http://10.0.2.2:8000/api/categories');
         if (responseCategories.status === 200) {
-          const categ = responseCategories.data.categories.map(categ => new Categorie(categ.id, categ.Nom));
-          setCategories(categ);
+          const categs = responseCategories.data.categories.map(categ => new Categorie(categ.id, categ.Nom));
+
+          setCategories(categs);
         } else {
           console.log('Failed to fetch categories');
         }
@@ -58,12 +65,12 @@ const CategoryScreen = ({ route }) => {
         </View>
       </View>
       <View style={styles.categoryList}>
-        {categories.map((category) => (
+        {categories.map((categ,index) => (
           <TouchableOpacity
-            key={category.id}
+            key={index}
             style={styles.categoryItem}
-            onPress={() => handleCategoryPress(category.id)}>
-            <Text style={styles.categoryItemText}>{category.Nom}</Text>
+            onPress={() => handleCategoryPress(categ)}>
+            <Text style={styles.categoryItemText}>{categ.Nom}</Text>
           </TouchableOpacity>
         ))}
       </View>
