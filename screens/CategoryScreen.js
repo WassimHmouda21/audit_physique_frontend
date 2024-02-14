@@ -1,12 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import CustomHeader from '../components/CustomHeader';
 import axios from 'axios';
+import { useNavigation } from '@react-navigation/native';
 
 const CategoryScreen = ({ route }) => {
   const [categories, setCategories] = useState([]);
   const [customerSiteStructure, setCustomerSiteStructure] = useState('');
   const { siteId } = route.params;
+  const navigation = useNavigation();
+
+  class Categorie {
+    constructor(id, Nom) {
+      this.id = id;
+      this.Nom = Nom;
+    }
+  }
+
+  const handleCategoryPress = (categoryId) => {
+    navigation.navigate('QuestionScreen', { categoryId });
+  };
 
   useEffect(() => {
     async function fetchData() {
@@ -14,7 +27,8 @@ const CategoryScreen = ({ route }) => {
         // Fetch categories
         const responseCategories = await axios.get('http://10.0.2.2:8000/api/categories');
         if (responseCategories.status === 200) {
-          setCategories(responseCategories.data.categories);
+          const categ = responseCategories.data.categories.map(categ => new Categorie(categ.id, categ.Nom));
+          setCategories(categ);
         } else {
           console.log('Failed to fetch categories');
         }
@@ -36,11 +50,21 @@ const CategoryScreen = ({ route }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Customer Site: {customerSiteStructure}</Text>
-      <Text style={styles.subtitle}>Categories:</Text>
+      <View style={styles.card}>
+        <View style={styles.cardContent}>
+          <Text style={styles.title}>Customer Site:</Text>
+          <Text style={styles.title}>{customerSiteStructure}</Text>
+          <Text style={styles.subtitle}>Categories:</Text>
+        </View>
+      </View>
       <View style={styles.categoryList}>
         {categories.map((category) => (
-          <Text key={category.id} style={styles.categoryItem}>{category.Nom}</Text>
+          <TouchableOpacity
+            key={category.id}
+            style={styles.categoryItem}
+            onPress={() => handleCategoryPress(category.id)}>
+            <Text>{category.Nom}</Text>
+          </TouchableOpacity>
         ))}
       </View>
       <View style={styles.footer}>
@@ -60,22 +84,37 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 10,
+    textAlign: 'center',
+    color: '#007bff',
   },
   subtitle: {
-    fontSize: 18,
+    fontSize: 22,
     fontWeight: 'bold',
     marginBottom: 5,
+    textAlign: 'center',
+    color: 'green',
+  },
+  card: {
+    flexDirection: 'row',
+    marginBottom: 20,
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 15,
   },
   categoryList: {
     width: '100%',
     paddingHorizontal: 20,
+    backgroundColor: 'white', // Set background color to white
   },
   categoryItem: {
     fontSize: 20,
     paddingVertical: 10,
     borderBottomWidth: 1,
     borderBottomColor: 'black',
+    color: 'black', // Set text color to black
   },
+  
   footer: {
     position: 'absolute',
     bottom: 0,
