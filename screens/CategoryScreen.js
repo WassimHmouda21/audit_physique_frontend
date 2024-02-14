@@ -63,7 +63,7 @@ const CategoryScreen = ({ route }) => {
             key={category.id}
             style={styles.categoryItem}
             onPress={() => handleCategoryPress(category.id)}>
-            <Text>{category.Nom}</Text>
+            <Text style={styles.categoryItemText}>{category.Nom}</Text>
           </TouchableOpacity>
         ))}
       </View>
@@ -105,16 +105,17 @@ const styles = StyleSheet.create({
   categoryList: {
     width: '100%',
     paddingHorizontal: 20,
-    backgroundColor: 'white', // Set background color to white
+    backgroundColor: 'white',  // Set background color to white
   },
   categoryItem: {
-    fontSize: 20,
-    paddingVertical: 10,
+    paddingVertical: 18,
     borderBottomWidth: 1,
     borderBottomColor: 'black',
+  },
+  categoryItemText: {
+    fontSize: 18, // Set font size to make letters big
     color: 'black', // Set text color to black
   },
-  
   footer: {
     position: 'absolute',
     bottom: 0,
