@@ -9,7 +9,7 @@ import ProgressionScreen from './screens/ProgressionScreen';
 import SitesScreen from './screens/SitesScreen';
 import CategoryScreen from './screens/CategoryScreen';
 import QuestionScreen from './screens/QuestionScreen';
-
+import ReponseScreen from './screens/ReponseScreen';
 const Stack = createStackNavigator();
 
 const Navigation = () => {
@@ -23,6 +23,7 @@ const Navigation = () => {
         <Stack.Screen name="SitesScreen" component={SitesScreen} />
         <Stack.Screen name="CategoryScreen" component={CategoryScreen} />     
         <Stack.Screen name="QuestionScreen" component={QuestionScreen} />
+        <Stack.Screen name="ReponseScreen" component={ReponseScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

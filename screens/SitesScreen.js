@@ -135,9 +135,10 @@ const styles = StyleSheet.create({
   },
   rectangle: {
     width: 20,
-    height: 25,
+    height: 20,
     backgroundColor: 'red',
     marginRight: 10,
+    borderRadius: 25 / 2, // Set borderRadius to half of the height for vertical oval or half of the width for horizontal oval
   },
   cardContent: {
     flex: 1,

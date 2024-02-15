@@ -56,7 +56,8 @@ const QuestionScreen = ({ route }) => {
   }, [categoryId, siteId]); // Include both categoryId and siteId in the dependency array
   
   const handleQuestionPress = (question) => {
-    // Implement functionality for handling question press
+    console.log("Question ID:", question);
+    navigation.navigate('ReponseScreen', { questionId: question.id});
   };
 
   return (

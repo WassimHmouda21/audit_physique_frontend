@@ -80,12 +80,12 @@ const styles = StyleSheet.create({
   infoText: {
     fontSize: 16,
   },
-  button: {
-    backgroundColor: '#007bff',
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-    borderRadius: 5,
-  },
+  // button: {
+  //   backgroundColor: '#007bff',
+  //   paddingVertical: 10,
+  //   paddingHorizontal: 15,
+  //   borderRadius: 5,
+  // },
   buttonText: {
     color: '#ffffff',
     fontSize: 16,
