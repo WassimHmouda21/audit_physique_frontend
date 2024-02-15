@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, StatusBar, Image } from 'react-native';
 import CustomHeader from '../components/CustomHeader';
+import CustomButton from '../components/CustomButton';
 import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
 
@@ -68,7 +69,6 @@ const SurveyScreen = () => {
       )}
       {customer && (
         <View style={styles.card}>
-        
           <View style={styles.detailsContainer}>
             <View style={styles.detailRow}>
               <View style={styles.detailItem}>
@@ -83,15 +83,12 @@ const SurveyScreen = () => {
                 <Text style={styles.detailLabel}>Description:</Text>
                 <Text style={styles.detailValue}>{customer.Description}</Text>
               </View>
-              </View>
-              <View style={styles.detailRow}>
-              <View style={styles.detailItem}>
-              <Text style={styles.detailLabel}>SecteurActivite:</Text>
-                <Text style={styles.detailValue}>{customer.SecteurActivite}</Text>
-              {/* Add the fourth field here */}
             </View>
-           
-          
+            <View style={styles.detailRow}>
+              <View style={styles.detailItem}>
+                <Text style={styles.detailLabel}>SecteurActivite:</Text>
+                <Text style={styles.detailValue}>{customer.SecteurActivite}</Text>
+              </View>
               <View style={styles.detailItem}>
                 <Text style={styles.detailLabel}>Categorie:</Text>
                 <Text style={styles.detailValue}>{customer.Categorie}</Text>
@@ -100,21 +97,16 @@ const SurveyScreen = () => {
                 <Text style={styles.detailLabel}>Site_Web:</Text>
                 <Text style={styles.detailValue}>{customer.Site_Web}</Text>
               </View>
-              </View>
-              <View style={styles.detailRow}>
+            </View>
+            <View style={styles.detailRow}>
               <View style={styles.detailItem}>
                 <Text style={styles.detailLabel}>Adresse_mail:</Text>
                 <Text style={styles.detailValue}>{customer.Adresse_mail}</Text>
               </View>
-              <Text style={styles.detailLabel}>Organigramme:</Text>
+              <View style={styles.detailItem}>
+                <Text style={styles.detailLabel}>Organigramme:</Text>
                 <Text style={styles.detailValue}>{customer.Organigramme}</Text>
-              {/* Add the fourth field here */}
-            </View>
-            
-           
-              
               </View>
-              <View style={styles.detailRow}>
               <View style={styles.detailItem}>
                 <Text style={styles.detailLabel}>Type:</Text>
                 <Text style={styles.detailValue}>{customer.Type}</Text>
@@ -123,14 +115,10 @@ const SurveyScreen = () => {
                 <Text style={styles.detailLabel}>Network_Design:</Text>
                 <Text style={styles.detailValue}>{customer.Network_Design}</Text>
               </View>
-            
-            
-            {/* Add other rows of fields here */}
+            </View>
           </View>
-          
-          <TouchableOpacity style={styles.button} onPress={handletheMissingInspectionsPress}>
-            <Text style={styles.buttonText}>Join Survey Project</Text>
-          </TouchableOpacity>
+          {/* Use the CustomButton component and pass the handletheMissingInspectionsPress function */}
+          <CustomButton title="Join Survey Project" onPress={handletheMissingInspectionsPress} />
         </View>
       )}
       <StatusBar style="auto" />

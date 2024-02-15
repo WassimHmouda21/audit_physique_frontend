@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import CustomHeader from '../components/CustomHeader'; // Update the path
-
+import CustomButton from '../components/CustomButton';
 const HomeScreen = () => {
   const [date, setDate] = useState(new Date());
   const [undoneSurveys, setUndoneSurveys] = useState(3); // Example value
@@ -20,9 +20,10 @@ const HomeScreen = () => {
         <Text style={styles.dateText}>{date.toDateString()}</Text>
         <Text style={styles.infoText}>Hello, you have {undoneSurveys} undone surveys</Text>
       </View>
-      <TouchableOpacity style={styles.button} onPress={handleMissingInspectionsPress}>
+      <CustomButton title="Missing inspections" onPress={handleMissingInspectionsPress} />
+      {/* <TouchableOpacity style={styles.button} onPress={handleMissingInspectionsPress}>
         <Text style={styles.buttonText}>Missing inspections</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </View>
   </View>
   <View style={[styles.bottomContent, { marginTop: 0, justifyContent: 'center' }]}>
