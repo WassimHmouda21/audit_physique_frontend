@@ -18,13 +18,12 @@ const CategoryScreen = ({ route }) => {
   }
 
   const handleCategoryPress = (categorie) => {
-   
-
     console.log("Categorie :", categorie);
     
     // Navigate to CategoryScreen and pass the site ID as a parameter
-    console.log("Navigating to QuestionScreen with categorie ID:", categorie.id);
-    navigation.navigate('QuestionScreen', { categoryId: categorie.id });
+    console.log("Navigating to QuestionScreen with category ID:", categorie.id);
+    console.log("Site ID:", siteId);
+    navigation.navigate('QuestionScreen', { categoryId: categorie.id, siteId: siteId });
   };
 
   useEffect(() => {
