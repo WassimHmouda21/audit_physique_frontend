@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Modal, Button } from 'react-native'; // Import Modal and Button components
 import axios from 'axios';
 import CustomHeader from '../components/CustomHeader';
 import { useNavigation } from '@react-navigation/native';
@@ -19,6 +19,7 @@ const ReponseScreen = ({ route }) => {
   const [reponses, setReponses] = useState([]);
   const { questionId } = route.params;
   const navigation = useNavigation();
+  const [showModal, setShowModal] = useState(false); // State to control modal visibility
 
   useEffect(() => {
     async function fetchReponses() {
@@ -40,54 +41,81 @@ const ReponseScreen = ({ route }) => {
 
   return (
     <View style={styles.container}>
-      {Array.isArray(reponses) && reponses.length > 0 ? (
-        reponses.map((item) => (
-          <View key={item.id} style={styles.dataWrapper}>
-             <View><Text style={styles.text}>{item.projet}</Text></View>
-             <View><Text style={styles.text}>{item.question_id}</Text></View>
-             <View><Text style={styles.text}>{item.conformite}</Text></View>
-             <View><Text style={styles.text}>{item.commentaire}</Text></View>
-          </View>
-        ))
-      ) : (
-        <Text>No data available</Text>
-      )}
-      <View style={styles.footer}>
-        <CustomHeader />
+      <View style={styles.dataWrapper}>
+        <View style={{ flex: 1 }}><Text>Projet</Text></View>
+        <View style={{ flex: 1 }}><Text>Question ID</Text></View>
+        <View style={{ flex: 1 }}><Text>Conformite</Text></View>
+        <View style={{ flex: 1 }}><Text>Commentaire</Text></View>
+        <View style={{ flex: 1 }}><Text>Site</Text></View>
       </View>
+      {reponses.length ? reponses.map((item, index) => (
+  <View key={index} style={styles.dataWrapper}>
+    <Text>{item.projet}</Text>
+    <Text>{item.question_id}</Text>
+    <Text>{item.conformite}</Text>
+    <Text>{item.commentaire}</Text>
+    <Text>{item.site}</Text>
+    <Button title='Update' onPress={() => updateReponse(item)} />
+  </View>
+)) : null}
+
+      <Modal visible={showModal} transparent={true}>
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text>Modal Content</Text>
+            <Button title='Close' onPress={() => setShowModal(false)} />
+          </View>
+        </View>
+      </Modal>
     </View>
   );
-};
+      }  
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingTop: 20,
-  },
-  dataWrapper: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    backgroundColor: '#007bff',
-    marginVertical: 10,
-    padding: 7,
-    borderRadius: 5,
-    width: '90%',
-  },
-  text: {
-    color: '#fff',
-    fontSize: 16,
-  },
-  footer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-  },
-});
-
-export default ReponseScreen;
+      const styles = StyleSheet.create({
+        container: {
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+        },
+        dataWrapper: {
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          backgroundColor: '#007bff',
+          margin: 5,
+          alignItems: 'center',
+          marginVertical: 10,
+          padding: 7
+        },
+        input: {
+          height: 40,
+          width: '80%',
+          marginVertical: 10,
+          borderWidth: 1,
+          padding: 10,
+        },
+        centeredView: {
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        },
+        modalView: {
+          backgroundColor: '#007bff',
+          padding: 20,
+          borderRadius: 10,
+          shadowColor:"#fff",
+          shadowOpacity:0.60,
+          elevation: 5,
+        },
+        footer: {
+          position: 'absolute',
+          bottom: 0,
+          left: 0,
+          right: 0,
+        },
+      });
+      
+      export default ReponseScreen;
 
 
   // const updateReponse = async (item) => {
