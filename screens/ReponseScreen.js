@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Modal, Button } from 'react-native'; // Import Modal and Button components
+import { View, Text, StyleSheet, Modal, Button, TextInput } from 'react-native';
 import axios from 'axios';
 import CustomHeader from '../components/CustomHeader';
 import { useNavigation } from '@react-navigation/native';
@@ -19,7 +19,10 @@ const ReponseScreen = ({ route }) => {
   const [reponses, setReponses] = useState([]);
   const { questionId } = route.params;
   const navigation = useNavigation();
-  const [showModal, setShowModal] = useState(false); // State to control modal visibility
+  const [showModal, setShowModal] = useState(false);
+  const [conformite, setConformite] = useState('');
+  const [commentaire, setCommentaire] = useState('');
+  const [selectedReponse, setSelectedReponse] = useState(null);
 
   useEffect(() => {
     async function fetchReponses() {
@@ -39,6 +42,33 @@ const ReponseScreen = ({ route }) => {
     fetchReponses();
   }, [questionId]);
 
+  const updateReponse = async (item) => {
+    setSelectedReponse(item);
+    setConformite(item.conformite);
+    setCommentaire(item.commentaire);
+    setShowModal(true);
+  };
+
+  const handleUpdate = async () => {
+    try {
+      setShowModal(false);
+      console.warn('Updating response:', conformite, commentaire);
+      const url = `http://10.0.2.2:8000/api/updatereponse/${selectedReponse.id}`;
+      const response = await axios.put(url, { conformite, commentaire });
+      if (response.status === 200) {
+        console.warn('Response updated successfully');
+        // Refresh data or perform other actions after successful update
+        const updatedReponse = new Reponse(selectedReponse.id, selectedReponse.projet, selectedReponse.question_id, conformite, commentaire, selectedReponse.site);
+        const updatedReponses = reponses.map(rep => rep.id === selectedReponse.id ? updatedReponse : rep);
+        setReponses(updatedReponses);
+      } else {
+        throw new Error('Failed to update response');
+      }
+    } catch (error) {
+      console.error('Error updating response:', error.message);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.dataWrapper}>
@@ -49,140 +79,17 @@ const ReponseScreen = ({ route }) => {
         <View style={{ flex: 1 }}><Text>Site</Text></View>
       </View>
       {reponses.length ? reponses.map((item, index) => (
-  <View key={index} style={styles.dataWrapper}>
-    <Text>{item.projet}</Text>
-    <Text>{item.question_id}</Text>
-    <Text>{item.conformite}</Text>
-    <Text>{item.commentaire}</Text>
-    <Text>{item.site}</Text>
-    <Button title='Update' onPress={() => updateReponse(item)} />
-  </View>
-)) : null}
+        <View key={index} style={styles.dataWrapper}>
+          <Text>{item.projet}</Text>
+          <Text>{item.question_id}</Text>
+          <Text>{item.conformite}</Text>
+          <Text>{item.commentaire}</Text>
+          <Text>{item.site}</Text>
+          <Button title='Update' onPress={() => updateReponse(item)} />
+        </View>
+      )) : null}
 
       <Modal visible={showModal} transparent={true}>
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <Text>Modal Content</Text>
-            <Button title='Close' onPress={() => setShowModal(false)} />
-          </View>
-        </View>
-      </Modal>
-    </View>
-  );
-      }  
-
-      const styles = StyleSheet.create({
-        container: {
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-        },
-        dataWrapper: {
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          backgroundColor: '#007bff',
-          margin: 5,
-          alignItems: 'center',
-          marginVertical: 10,
-          padding: 7
-        },
-        input: {
-          height: 40,
-          width: '80%',
-          marginVertical: 10,
-          borderWidth: 1,
-          padding: 10,
-        },
-        centeredView: {
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-          backgroundColor: 'rgba(0, 0, 0, 0.5)',
-        },
-        modalView: {
-          backgroundColor: '#007bff',
-          padding: 20,
-          borderRadius: 10,
-          shadowColor:"#fff",
-          shadowOpacity:0.60,
-          elevation: 5,
-        },
-        footer: {
-          position: 'absolute',
-          bottom: 0,
-          left: 0,
-          right: 0,
-        },
-      });
-      
-      export default ReponseScreen;
-
-
-  // const updateReponse = async (item) => {
-  //   // Implement your logic to update response here
-  // };
-
-  // const updateReponse = async (item) => {
-  //   setSelectedReponse(item);
-  //   setShowModal(true);
-  // };
-
-  // const handleUpdate = async () => {
-  //   try {
-  //     setShowModal(false);
-  //     console.warn('Updating response:', conformite, commentaire);
-  //     const url = `http://10.0.2.2:8000/api/updatereponse/${questionId}`;
-  //     const response = await fetch(url, {
-  //       method: "PUT",
-  //       headers: {
-  //         "Content-Type": "application/json"
-  //       },
-  //       body: JSON.stringify({ conformite, commentaire })
-  //     });
-  //     if (!response.ok) {
-  //       throw new Error('Failed to update response');
-  //     }
-  //     const result = await response.json();
-  //     console.warn('Update result:', result);
-  //     // Refresh data or perform other actions after successful update
-  //   } catch (error) {
-  //     console.error('Error updating response:', error.message);
-  //   }
-  // };
-
-//   console.log(result); // Check the structure and content of data array
-//   return (
-//       <View>
-//         {
-//           data.length ? 
-//           data.map((item) => {
-//             console.log(item.projet); // Check the value of projet for each item
-//             return (
-//               <View key={item.id}>
-//                 <Text>{item.projet}</Text>
-//               </View>
-//             );
-//           }) : null
-//         }
-//       </View>
-//   )
-// }  
-
-      
-      {/* <Modal visible={showModal} transparent={true}>
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <Text>Modal Content</Text>
-            <Button title='Close' onPress={() => setShowModal(false)} />
-          </View>
-        </View>
-      </Modal> */}
-    {/* </View>
-  )
-  
-      }; */}
-
-      {/* <Modal visible={showModal} transparent={true}>
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <TextInput
@@ -201,14 +108,63 @@ const ReponseScreen = ({ route }) => {
             <Button title='Close' onPress={() => setShowModal(false)} />
           </View>
         </View>
-      </Modal> */}
-    {/* //   <Button onPress={() => navigation.goBack()} title="Close" />
-    //   <View style={styles.footer}>
-    //     <CustomHeader />
-    //   </View>
-    // </View>
-//   );
-// }; */}
+      </Modal>
+      <Button onPress={() => navigation.goBack()} title="Close" />
+      <View style={styles.footer}>
+        <CustomHeader />
+      </View>
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  dataWrapper: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: '#007bff',
+    margin: 5,
+    alignItems: 'center',
+    marginVertical: 10,
+    padding: 7
+  },
+  input: {
+    height: 40,
+    width: '80%',
+    marginVertical: 10,
+    borderWidth: 1,
+    padding: 10,
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalView: {
+    backgroundColor: '#007bff',
+    padding: 20,
+    borderRadius: 10,
+    shadowColor:"#fff",
+    shadowOpacity:0.60,
+    elevation: 5,
+  },
+  footer: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+  },
+});
+
+export default ReponseScreen;
+
+
+ 
 
 // const styles = StyleSheet.create({
 //   container: {
