@@ -71,20 +71,20 @@ const ReponseScreen = ({ route }) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.dataWrapper}>
-        <View style={{ flex: 1 }}><Text>Projet</Text></View>
-        <View style={{ flex: 1 }}><Text>Question ID</Text></View>
-        <View style={{ flex: 1 }}><Text>Conformite</Text></View>
-        <View style={{ flex: 1 }}><Text>Commentaire</Text></View>
-        <View style={{ flex: 1 }}><Text>Site</Text></View>
+      <View style={styles.labelsWrapper}>
+        <Text style={[styles.label, { flex: 1 }]}>Projet</Text>
+        <Text style={[styles.label, { flex: 1 }]}>Question ID</Text>
+        <Text style={[styles.label, { flex: 1 }]}>Conformite</Text>
+        <Text style={[styles.label, { flex: 1 }]}>Commentaire</Text>
+        <Text style={[styles.label, { flex: 1 }]}>Site</Text>
       </View>
       {reponses.length ? reponses.map((item, index) => (
         <View key={index} style={styles.dataWrapper}>
-          <Text>{item.projet}</Text>
-          <Text>{item.question_id}</Text>
-          <Text>{item.conformite}</Text>
-          <Text>{item.commentaire}</Text>
-          <Text>{item.site}</Text>
+          <Text style={[styles.dataText, { flex: 1 }]}>{item.projet}</Text>
+          <Text style={[styles.dataText, { flex: 1 }]}>{item.question_id}</Text>
+          <Text style={[styles.dataText, { flex: 1 }]}>{item.conformite}</Text>
+          <Text style={[styles.dataText, { flex: 1 }]}>{item.commentaire}</Text>
+          <Text style={[styles.dataText, { flex: 1 }]}>{item.site}</Text>
           <Button title='Update' onPress={() => updateReponse(item)} />
         </View>
       )) : null}
@@ -92,18 +92,18 @@ const ReponseScreen = ({ route }) => {
       <Modal visible={showModal} transparent={true}>
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
-            <TextInput
-              style={styles.input}
-              placeholder="Enter Conformite"
-              value={conformite}
-              onChangeText={(text) => setConformite(text)}
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="Enter Commentaire"
-              value={commentaire}
-              onChangeText={(text) => setCommentaire(text)}
-            />
+          <TextInput
+  style={styles.input}
+  placeholder="Enter Conformite"
+  value={conformite.toString()} // Convert to string
+  onChangeText={(text) => setConformite(text)}
+/>
+<TextInput
+  style={styles.input}
+  placeholder="Enter Commentaire"
+  value={commentaire.toString()} // Convert to string
+  onChangeText={(text) => setCommentaire(text)}
+/>
             <Button title='Update' onPress={handleUpdate} />
             <Button title='Close' onPress={() => setShowModal(false)} />
           </View>
@@ -123,14 +123,29 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  labelsWrapper: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: 'green', // Change background color to green
+    marginVertical: 10,
+    padding: 7
+  },
+  label: {
+    color: 'white', // Change label text color to white
+    textAlign: 'center',
+    fontSize: 12, // Set font size to 12 (or any other desired value)
+  },
+  
   dataWrapper: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    backgroundColor: '#007bff',
-    margin: 5,
-    alignItems: 'center',
+    backgroundColor: 'white', // Change background color to white
     marginVertical: 10,
     padding: 7
+  },
+  dataText: {
+    textAlign: 'center',
+    fontSize: 12
   },
   input: {
     height: 40,
@@ -162,53 +177,3 @@ const styles = StyleSheet.create({
 });
 
 export default ReponseScreen;
-
-
- 
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     justifyContent: 'center',a
-//     alignItems: 'center',
-//   },
-//   dataWrapper: {
-//     flex: 1,
-//     flexDirection: 'row',
-//     justifyContent: 'space-between',
-//     backgroundColor: '#007bff',
-//     margin: 5,
-//     alignItems: 'center',
-//     marginVertical: 10,
-//     padding: 7
-//   },
-//   input: {
-//     height: 40,
-//     width: '80%',
-//     marginVertical: 10,
-//     borderWidth: 1,
-//     padding: 10,
-//   },
-//   centeredView: {
-//     flex: 1,
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//     backgroundColor: 'rgba(0, 0, 0, 0.5)',
-//   },
-//   modalView: {
-//     backgroundColor: '#007bff',
-//     padding: 20,
-//     borderRadius: 10,
-//     shadowColor:"#fff",
-//     shadowOpacity:0.60,
-//     elevation: 5,
-//   },
-//   footer: {
-//     position: 'absolute',
-//     bottom: 0,
-//     left: 0,
-//     right: 0,
-//   },
-// });
-
-// export default ReponseScreen;
