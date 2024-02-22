@@ -10,6 +10,7 @@ import SitesScreen from './screens/SitesScreen';
 import CategoryScreen from './screens/CategoryScreen';
 import QuestionScreen from './screens/QuestionScreen';
 import ReponseScreen from './screens/ReponseScreen';
+import SearchCustomerScreen from './screens/SearchCustomerScreen';
 const Stack = createStackNavigator();
 
 const Navigation = () => {
@@ -24,6 +25,7 @@ const Navigation = () => {
         <Stack.Screen name="CategoryScreen" component={CategoryScreen} />     
         <Stack.Screen name="QuestionScreen" component={QuestionScreen} />
         <Stack.Screen name="ReponseScreen" component={ReponseScreen} />
+        <Stack.Screen name="SearchCustomerScreen" component={SearchCustomerScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

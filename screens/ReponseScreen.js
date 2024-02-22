@@ -71,12 +71,14 @@ const ReponseScreen = ({ route }) => {
 
   return (
     <View style={styles.container}>
+       <Text style={styles.subtitle}>Add your response here:</Text>
       <View style={styles.labelsWrapper}>
         <Text style={[styles.label, { flex: 1 }]}>Projet</Text>
         <Text style={[styles.label, { flex: 1 }]}>Question ID</Text>
         <Text style={[styles.label, { flex: 1 }]}>Conformite</Text>
         <Text style={[styles.label, { flex: 1 }]}>Commentaire</Text>
         <Text style={[styles.label, { flex: 1 }]}>Site</Text>
+        <Text style={[styles.label, { flex: 1 }]}>action</Text>
       </View>
       {reponses.length ? reponses.map((item, index) => (
         <View key={index} style={styles.dataWrapper}>
@@ -85,7 +87,7 @@ const ReponseScreen = ({ route }) => {
           <Text style={[styles.dataText, { flex: 1 }]}>{item.conformite}</Text>
           <Text style={[styles.dataText, { flex: 1 }]}>{item.commentaire}</Text>
           <Text style={[styles.dataText, { flex: 1 }]}>{item.site}</Text>
-          <Button title='Update' onPress={() => updateReponse(item)} />
+          <Button title='Answer' onPress={() => updateReponse(item)} />
         </View>
       )) : null}
 
@@ -133,7 +135,7 @@ const styles = StyleSheet.create({
   label: {
     color: 'white', // Change label text color to white
     textAlign: 'center',
-    fontSize: 12, // Set font size to 12 (or any other desired value)
+    fontSize: 10, // Set font size to 12 (or any other desired value)
   },
   
   dataWrapper: {
@@ -145,7 +147,8 @@ const styles = StyleSheet.create({
   },
   dataText: {
     textAlign: 'center',
-    fontSize: 12
+    fontSize: 12,
+    color: 'black'
   },
   input: {
     height: 40,
@@ -153,6 +156,13 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     borderWidth: 1,
     padding: 10,
+  },
+  subtitle: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    marginBottom: 5,
+    textAlign: 'center',
+    color: 'green',
   },
   centeredView: {
     flex: 1,

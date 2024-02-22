@@ -2,11 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import CustomHeader from '../components/CustomHeader'; // Update the path
 import CustomButton from '../components/CustomButton';
+import { useNavigation } from '@react-navigation/native';
+
+
 const HomeScreen = () => {
   const [date, setDate] = useState(new Date());
   const [undoneSurveys, setUndoneSurveys] = useState(3); // Example value
-
+  const navigation = useNavigation();
   const handleMissingInspectionsPress = () => {
+    navigation.navigate('SearchCustomerScreen');// Implement logic for handling Missing Inspections button press
+  };
+
+  const handleMissingInspectionsPresse = () => {
     // Implement logic for handling Missing Inspections button press
   };
 
@@ -20,16 +27,17 @@ const HomeScreen = () => {
         <Text style={styles.dateText}>{date.toDateString()}</Text>
         <Text style={styles.infoText}>Hello, you have {undoneSurveys} undone surveys</Text>
       </View>
-      <CustomButton title="Missing inspections" onPress={handleMissingInspectionsPress} />
+      <CustomButton title="Missing inspections" onPress={handleMissingInspectionsPresse} />
       {/* <TouchableOpacity style={styles.button} onPress={handleMissingInspectionsPress}>
         <Text style={styles.buttonText}>Missing inspections</Text>
       </TouchableOpacity> */}
     </View>
   </View>
   <View style={[styles.bottomContent, { marginTop: 0, justifyContent: 'center' }]}>
-    <Text style={[styles.bottomText, { fontSize: 24, color: '#007bff', fontStyle: 'italic' }]}>
-      Join a survey that meets our expectations!
-    </Text>
+  
+  <CustomButton title="Join a survey that meets our expectations!" onPress={handleMissingInspectionsPress} />
+  <View style={{ marginVertical: 10 }}> 
+  </View> 
     <Image source={require('../assets/images/illustration_survey.jpg')} style={{ width: 350, height: 300 }} />
   </View>
   <View style={styles.blankSpace} />
