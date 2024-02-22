@@ -1,31 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, SafeAreaView, TextInput, StyleSheet, FlatList, ActivityIndicator, Image } from 'react-native';
 import axios from 'axios';
-
-class Customer {
-  constructor(id, SN, LN, Logo, Description, SecteurActivite, Categorie, Site_Web, Adresse_mail, Organigramme, Network_Design, Type) {
-    this.id = id;
-    this.SN = SN;
-    this.LN = LN;
-    this.Logo = Logo;
-    this.Description = Description;
-    this.SecteurActivite = SecteurActivite;
-    this.Categorie = Categorie;
-    this.Site_Web = Site_Web;
-    this.Adresse_mail = Adresse_mail;
-    this.Organigramme = Organigramme;
-    this.Network_Design = Network_Design;
-    this.Type = Type;
-  }
-}
+import filter from "lodash.filter";
 
 const API_ENDPOINT = 'http://10.0.2.2:8000/api/customerpage';
 
 const SearchCustomerScreen = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [customer, setCustomers] = useState(null);
+  const [fullData, setFullData] = useState(null);
   const [error, setError] = useState(null);
-  const [data, setData] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
@@ -37,7 +21,8 @@ const SearchCustomerScreen = () => {
     try {
       const response = await axios.get('http://10.0.2.2:8000/api/customerpage');
       console.log(response.data);
-      setCustomers(response.data.customers); // Assuming `customers` is the correct property containing the data array
+      setCustomers(response.data.customers); 
+      setFullData(response.data.customers); // Update fullData state
       setIsLoading(false);
     } catch (error) {
       setError(error);
@@ -48,7 +33,23 @@ const SearchCustomerScreen = () => {
 
   const handleSearch = (query) => {
     setSearchQuery(query);
-  }
+    const formattedQuery = query.toLowerCase();
+    const filteredData = fullData.filter((customer) => {
+      const containsQuery = contains(customer, formattedQuery);
+      console.log(`Customer: ${JSON.stringify(customer)}, Contains Query: ${containsQuery}`);
+      return containsQuery;
+    });
+    console.log('Filtered Data:', filteredData);
+    setCustomers(filteredData); // Update customers state with filtered data
+  };
+  
+  const contains = ({ SN, LN, Adresse_mail }, query) => {
+    return (
+      SN.toLowerCase().includes(query) ||
+      LN.toLowerCase().includes(query) ||
+      Adresse_mail.toLowerCase().includes(query)
+    );
+  };
 
   if (isLoading) {
     return (
@@ -113,7 +114,7 @@ const SearchCustomerScreen = () => {
       {console.log('Error:', error)}
     </SafeAreaView>
   );
-      }
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -135,18 +136,18 @@ const styles = StyleSheet.create({
   },
   textEmail: {
     fontSize: 17,
-    marginleft: 10 ,
+    marginLeft: 10 ,
     color: "grey",
   },
   textName: {
     fontSize: 20 ,
-    marginleft: 10 ,
-    fontWeigth: "600",
+    marginLeft: 10 ,
+    fontWeight: "600",
     color: "black",
   },
   image: {
     width: 100,
-    heigth : 100 ,
+    height: 100,
     borderRadius: 25,
   },
   footer: {
