@@ -94,11 +94,11 @@ const styles = StyleSheet.create({
   //   paddingHorizontal: 15,
   //   borderRadius: 5,
   // },
-  buttonText: {
-    color: '#ffffff',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
+  // buttonText: {
+  //   color: '#ffffff',
+  //   fontSize: 16,
+  //   fontWeight: 'bold',
+  // },
   bottomContent: {
     flex: 1,
     justifyContent: 'space-around',
