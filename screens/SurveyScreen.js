@@ -1,31 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, StatusBar, Image } from 'react-native';
 import CustomHeader from '../components/CustomHeader';
-import CustomButton from '../components/CustomButton';
 import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
 
-class Customer {
-  constructor(id, SN, LN, Logo, Description, SecteurActivite, Categorie, Site_Web, Adresse_mail, Organigramme, Network_Design, Type) {
-    this.id = id;
-    this.SN = SN;
-    this.LN = LN;
-    this.Logo = Logo;
-    this.Description = Description;
-    this.SecteurActivite = SecteurActivite;
-    this.Categorie = Categorie;
-    this.Site_Web = Site_Web;
-    this.Adresse_mail = Adresse_mail;
-    this.Organigramme = Organigramme;
-    this.Network_Design = Network_Design;
-    this.Type = Type;
-  }
-}
-
-const SurveyScreen = () => {
+const SurveyScreen = ({ route }) => {
   const [customer, setCustomer] = useState(null);
-  const navigation = useNavigation(); // initialize navigation
-  
+  const navigation = useNavigation();
+  const { customerId } = route.params;
+
   const handletheMissingInspectionsPress = () => {
     // Implement logic for handling Missing Inspections button press
     console.log('Button pressed');
@@ -37,20 +20,17 @@ const SurveyScreen = () => {
   useEffect(() => {
     async function fetchCustomer() {
       try {
-        const response = await axios.get('http://10.0.2.2:8000/api/customer/60');
-        console.log(response.data);
-        setData = response.data;
-        // Create an instance of Customer with received data
-        const fetchedCustomer = new Customer(data.id, data.SN, data.LN, data.Logo, data.Description, data.SecteurActivite, data.Categorie, data.Site_Web, data.Adresse_mail, data.Organigramme, data.Network_Design, data.Type);
-        setCustomer(fetchedCustomer); // Set customer data from the response
+        console.log('Customer ID:', customerId); // Log the customerId
+        const response = await axios.get(`http://10.0.2.2:8000/api/customer/${customerId}`);
+        console.log('Response data:', response.data); // Log the response data
+        setCustomer(response.data); // Set customer data from the response
       } catch (error) {
-        console.log(error);
+        console.log('Error fetching customer data:', error); // Log any errors
       }
     }
   
     fetchCustomer();
-  }, []);
-
+  }, [customerId]);
   return (
     <View style={styles.container}>
         <Text style={styles.infoText}>Your customer today is</Text>
@@ -69,6 +49,7 @@ const SurveyScreen = () => {
       )}
       {customer && (
         <View style={styles.card}>
+        
           <View style={styles.detailsContainer}>
             <View style={styles.detailRow}>
               <View style={styles.detailItem}>
@@ -83,12 +64,15 @@ const SurveyScreen = () => {
                 <Text style={styles.detailLabel}>Description:</Text>
                 <Text style={styles.detailValue}>{customer.Description}</Text>
               </View>
-            </View>
-            <View style={styles.detailRow}>
-              <View style={styles.detailItem}>
-                <Text style={styles.detailLabel}>SecteurActivite:</Text>
-                <Text style={styles.detailValue}>{customer.SecteurActivite}</Text>
               </View>
+              <View style={styles.detailRow}>
+              <View style={styles.detailItem}>
+              <Text style={styles.detailLabel}>SecteurActivite:</Text>
+                <Text style={styles.detailValue}>{customer.SecteurActivite}</Text>
+              {/* Add the fourth field here */}
+            </View>
+           
+          
               <View style={styles.detailItem}>
                 <Text style={styles.detailLabel}>Categorie:</Text>
                 <Text style={styles.detailValue}>{customer.Categorie}</Text>
@@ -97,16 +81,21 @@ const SurveyScreen = () => {
                 <Text style={styles.detailLabel}>Site_Web:</Text>
                 <Text style={styles.detailValue}>{customer.Site_Web}</Text>
               </View>
-            </View>
-            <View style={styles.detailRow}>
+              </View>
+              <View style={styles.detailRow}>
               <View style={styles.detailItem}>
                 <Text style={styles.detailLabel}>Adresse_mail:</Text>
                 <Text style={styles.detailValue}>{customer.Adresse_mail}</Text>
               </View>
-              <View style={styles.detailItem}>
-                <Text style={styles.detailLabel}>Organigramme:</Text>
+              <Text style={styles.detailLabel}>Organigramme:</Text>
                 <Text style={styles.detailValue}>{customer.Organigramme}</Text>
+              {/* Add the fourth field here */}
+            </View>
+            
+           
+              
               </View>
+              <View style={styles.detailRow}>
               <View style={styles.detailItem}>
                 <Text style={styles.detailLabel}>Type:</Text>
                 <Text style={styles.detailValue}>{customer.Type}</Text>
@@ -115,10 +104,14 @@ const SurveyScreen = () => {
                 <Text style={styles.detailLabel}>Network_Design:</Text>
                 <Text style={styles.detailValue}>{customer.Network_Design}</Text>
               </View>
-            </View>
+            
+            
+            {/* Add other rows of fields here */}
           </View>
-          {/* Use the CustomButton component and pass the handletheMissingInspectionsPress function */}
-          <CustomButton title="Join Survey Project" onPress={handletheMissingInspectionsPress} />
+          
+          <TouchableOpacity style={styles.button} onPress={handletheMissingInspectionsPress}>
+            <Text style={styles.buttonText}>Join Survey Project</Text>
+          </TouchableOpacity>
         </View>
       )}
       <StatusBar style="auto" />
@@ -186,15 +179,13 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: 'green',
   },
-  // button: {
-  //   backgroundColor: '#007bff',
-  //   paddingVertical: 10,
-  //   paddingHorizontal: 15,
-  //   padding: 15,
-  //   borderRadius: 5,
-  //   alignItems: 'center',
-  //   marginTop: 20,
-  // },
+  button: {
+    backgroundColor: '#007bff',
+    padding: 15,
+    borderRadius: 10,
+    alignItems: 'center',
+    marginTop: 20,
+  },
   buttonText: {
     color: '#fff',
     fontSize: 16,

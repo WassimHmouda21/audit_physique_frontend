@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, SafeAreaView, TextInput, StyleSheet, FlatList, ActivityIndicator, Image } from 'react-native';
+import { View, Text, SafeAreaView, TextInput, StyleSheet, FlatList, ActivityIndicator, Image ,TouchableOpacity} from 'react-native';
 import axios from 'axios';
 import filter from "lodash.filter";
-
+import { useNavigation } from '@react-navigation/native';
 const API_ENDPOINT = 'http://10.0.2.2:8000/api/customerpage';
 
 const SearchCustomerScreen = () => {
@@ -11,12 +11,17 @@ const SearchCustomerScreen = () => {
   const [fullData, setFullData] = useState(null);
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
-
+  const navigation = useNavigation();
   useEffect(() => {
     setIsLoading(true);
     fetchData(API_ENDPOINT);
   }, []);
 
+
+  const navigateToSurvey = (customerId) => {
+    console.log("Customer ID:", customerId);
+    navigation.navigate('Survey', { customerId: customerId });
+  };
   const fetchData = async (url) => {
     try {
       const response = await axios.get('http://10.0.2.2:8000/api/customerpage');
@@ -82,6 +87,7 @@ const SearchCustomerScreen = () => {
         <FlatList
           data={customer}
           renderItem={({ item }) => (
+            <TouchableOpacity onPress={() => navigateToSurvey(item.id)}>
             <View style={styles.itemContainer}>
               {item.Logo ? (
                 <Image
@@ -103,6 +109,7 @@ const SearchCustomerScreen = () => {
                 </Text>
               </View>
             </View>
+            </TouchableOpacity>
           )}
           keyExtractor={(item) => item.id.toString()}
         />
@@ -115,6 +122,9 @@ const SearchCustomerScreen = () => {
     </SafeAreaView>
   );
 }
+
+
+
 
 const styles = StyleSheet.create({
   container: {
