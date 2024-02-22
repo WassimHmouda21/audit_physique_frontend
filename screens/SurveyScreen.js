@@ -39,7 +39,7 @@ const SurveyScreen = () => {
       try {
         const response = await axios.get('http://10.0.2.2:8000/api/customer/60');
         console.log(response.data);
-        const data = response.data;
+        setData = response.data;
         // Create an instance of Customer with received data
         const fetchedCustomer = new Customer(data.id, data.SN, data.LN, data.Logo, data.Description, data.SecteurActivite, data.Categorie, data.Site_Web, data.Adresse_mail, data.Organigramme, data.Network_Design, data.Type);
         setCustomer(fetchedCustomer); // Set customer data from the response
