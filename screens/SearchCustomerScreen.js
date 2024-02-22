@@ -81,15 +81,11 @@ const SearchCustomerScreen = () => {
         <FlatList
           data={customer}
           renderItem={({ item }) => (
-            <View style={styles.item}>
-              <Text>
-                {item.SN}, {item.LN}, {item.Description}, {item.SecteurActivite}, {item.Categorie},
-                {item.Site_Web}, {item.Adresse_mail}, {item.Organigramme}, {item.Network_Design}, {item.Type}
-              </Text>
+            <View style={styles.itemContainer}>
               {item.Logo ? (
                 <Image
                   source={{ uri: `http://10.0.2.2:8000/assets/${item.Logo}` }}
-                  style={{ width: 100, height: 100 }}
+                  style={[styles.image, { width: 70, height: 70 }]}
                   onLoadStart={() => console.log('Image loading started')}
                   onLoadEnd={() => console.log('Image loading ended')}
                   onError={(error) => console.log('Image loading error:', error)}
@@ -97,6 +93,14 @@ const SearchCustomerScreen = () => {
               ) : (
                 <Text>No logo available</Text>
               )}
+              <View style={{ marginLeft: 10 }}>
+                <Text style={styles.textName}> 
+                  {item.SN}, {item.LN}
+                </Text>
+                <Text style={styles.textEmail}>
+                  {item.Adresse_mail}
+                </Text>
+              </View>
             </View>
           )}
           keyExtractor={(item) => item.id.toString()}
@@ -109,7 +113,7 @@ const SearchCustomerScreen = () => {
       {console.log('Error:', error)}
     </SafeAreaView>
   );
-      }  
+      }
 
 const styles = StyleSheet.create({
   container: {
@@ -122,6 +126,28 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderColor: "#ccc",
     borderWidth: 1,
+  },
+  itemContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginLeft: 10,
+    marginTop: 10,
+  },
+  textEmail: {
+    fontSize: 17,
+    marginleft: 10 ,
+    color: "grey",
+  },
+  textName: {
+    fontSize: 20 ,
+    marginleft: 10 ,
+    fontWeigth: "600",
+    color: "black",
+  },
+  image: {
+    width: 100,
+    heigth : 100 ,
+    borderRadius: 25,
   },
   footer: {
     position: 'absolute',
