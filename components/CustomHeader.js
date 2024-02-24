@@ -11,7 +11,7 @@ const CustomHeader = () => {
   };
 
   const handleNavigateToSurvey = () => {
-    navigation.navigate('Survey');
+    navigation.navigate('SearchCustomerScreen');
   };
 
   const handleNavigateToAlbum = () => {

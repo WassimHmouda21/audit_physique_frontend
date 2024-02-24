@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, SafeAreaView, TextInput, StyleSheet, FlatList, ActivityIndicator, Image ,TouchableOpacity} from 'react-native';
+import { View, Text, SafeAreaView, TextInput, StyleSheet,StatusBar, FlatList, ActivityIndicator, Image ,TouchableOpacity} from 'react-native';
 import axios from 'axios';
 import filter from "lodash.filter";
 import { useNavigation } from '@react-navigation/native';
+import CustomHeader from '../components/CustomHeader';
 const API_ENDPOINT = 'http://10.0.2.2:8000/api/customerpage';
 
 const SearchCustomerScreen = () => {
@@ -73,6 +74,9 @@ const SearchCustomerScreen = () => {
   }
 
   return (
+    <View style={{ flex: 1 }}>
+    <StatusBar style="auto" />
+    <View style={{ flex: 1 }}>
     <SafeAreaView style={{ flex: 1, marginHorizontal: 20 }}>
       <TextInput
         placeholder="Search"
@@ -120,6 +124,12 @@ const SearchCustomerScreen = () => {
       {console.log('Customer:', customer)}
       {console.log('Error:', error)}
     </SafeAreaView>
+    </View>
+      <View style={styles.footer}>
+        {/* Your footer content here */}
+        <CustomHeader />
+      </View>
+    </View>
   );
 }
 
