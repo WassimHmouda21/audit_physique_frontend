@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, StatusBar, Image } from 'reac
 import CustomHeader from '../components/CustomHeader';
 import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
-
+import CustomButton from '../components/CustomButton';
 const SurveyScreen = ({ route }) => {
   const [customer, setCustomer] = useState(null);
   const navigation = useNavigation();
@@ -108,10 +108,7 @@ const SurveyScreen = ({ route }) => {
             
             {/* Add other rows of fields here */}
           </View>
-          
-          <TouchableOpacity style={styles.button} onPress={handletheMissingInspectionsPress}>
-            <Text style={styles.buttonText}>Join Survey Project</Text>
-          </TouchableOpacity>
+          <CustomButton title="Join Survey Project" onPress={handletheMissingInspectionsPress} />
         </View>
       )}
       <StatusBar style="auto" />

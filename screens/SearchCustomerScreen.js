@@ -11,6 +11,7 @@ const SearchCustomerScreen = () => {
   const [customer, setCustomers] = useState(null);
   const [fullData, setFullData] = useState(null);
   const [error, setError] = useState(null);
+  const [showHeader, setShowHeader] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const navigation = useNavigation();
   useEffect(() => {
@@ -85,8 +86,15 @@ const SearchCustomerScreen = () => {
         autoCapitalize="none"
         autoCorrect={false}
         value={searchQuery}
-        onChangeText={(query) => handleSearch(query)}
-      />
+        onChangeText={(query) => {
+          handleSearch(query);
+              // Toggle visibility of CustomHeader based on search input
+              setShowHeader(query.length === 0);
+            }}
+            onFocus={() => setShowHeader(false)} // Hide CustomHeader when search box is focused
+            onBlur={() => setShowHeader(true)} // Show CustomHeader when search box loses focus
+          />
+
       {customer && customer.length > 0 ? (
         <FlatList
           data={customer}
@@ -125,10 +133,12 @@ const SearchCustomerScreen = () => {
       {console.log('Error:', error)}
     </SafeAreaView>
     </View>
-      <View style={styles.footer}>
-        {/* Your footer content here */}
-        <CustomHeader />
-      </View>
+    {showHeader && (
+        <View style={styles.footer}>
+          {/* Your footer content here */}
+          <CustomHeader />
+        </View>
+      )}
     </View>
   );
 }
