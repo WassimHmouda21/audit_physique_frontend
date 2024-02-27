@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, FlatList, Image } from 'react-native'; // Import FlatList and Image
+import { View, Text, StyleSheet, TouchableOpacity, FlatList, Button, Image, Modal,ScrollView,TextInput  } from 'react-native';
 import axios from 'axios';
 import CustomHeader from '../components/CustomHeader';
 import { useNavigation } from '@react-navigation/native';
-
+import {  RadioButton } from 'react-native-paper'; 
 class Question {
   constructor(id, ordre, Ref, Question, categorie_id) {
     this.id = id;
@@ -14,28 +14,52 @@ class Question {
   }
 }
 
+class Reponse {
+  constructor(id, projet, question_id, conformite, commentaire, site) {
+    this.id = id;
+    this.projet = projet;
+    this.question_id = question_id;
+    this.conformite = conformite;
+    this.commentaire = commentaire;
+    this.site = site;
+  }
+}
+
 const QuestionScreen = ({ route }) => {
   const [questions, setQuestions] = useState([]);
   const [customerSiteStructure, setCustomerSiteStructure] = useState('');
   const [categorieStructure, setCategorieStructure] = useState('');
-  const { categoryId, siteId } = route.params; // Corrected variable name
+  const [reponses, setReponses] = useState([]);
+  const { categoryId, siteId } = route.params;
   const navigation = useNavigation();
+  const [selectedValue, setSelectedValue] = useState('on');
+  const [showModal, setShowModal] = useState(false);
+  const [selectedReponse, setSelectedReponse] = useState(null);
+  const [conformite, setConformite] = useState('');
+  const [commentaire, setCommentaire] = useState('');
 
   useEffect(() => {
     async function fetchData() {
       try {
-        // Fetch questions by categoryId
+        console.log('Fetching questions for category ID:', categoryId);
         const responseQuestions = await axios.get(`http://10.0.2.2:8000/api/questions/${categoryId}`);
         if (responseQuestions.status === 200) {
+          console.log('Questions response:', responseQuestions.data);
           const quests = responseQuestions.data.questions.map(quest => new Question(quest.id, quest.ordre, quest.Ref, quest.Question, quest.categorie_id));
+          console.log('Mapped questions:', quests);
           setQuestions(quests);
+          // Fetch responses for each question
+          await Promise.all(quests.map(async (quest) => {
+            console.log('Fetching responses for question ID:', quest.id);
+            await fetchReponses(quest.id);
+          }));
         } else {
           console.log('Failed to fetch questions');
         }
 
-        // Fetch Customer_site by ID to get the Structure
         const responseCustomerSite = await axios.get(`http://10.0.2.2:8000/api/customer_site/${siteId}`);
         if (responseCustomerSite.status === 200) {
+          console.log('Customer site response:', responseCustomerSite.data);
           setCustomerSiteStructure(responseCustomerSite.data.Structure);
         } else {
           console.log('Failed to fetch customer site');
@@ -43,6 +67,7 @@ const QuestionScreen = ({ route }) => {
 
         const responseCategorie = await axios.get(`http://10.0.2.2:8000/api/categories/${categoryId}`);
         if (responseCategorie.status === 200) {
+          console.log('Categorie response:', responseCategorie.data);
           setCategorieStructure(responseCategorie.data.Nom);
         } else {
           console.log('Failed to fetch categorie');
@@ -53,78 +78,181 @@ const QuestionScreen = ({ route }) => {
     }
 
     fetchData();
-  }, [categoryId, siteId]); // Include both categoryId and siteId in the dependency array
+  }, [categoryId, siteId]);
 
-  const handleQuestionPress = (question) => {
-    console.log("Question ID:", question);
-    navigation.navigate('ReponseScreen', { questionId: question.id });
+  async function fetchReponses(questionId) {
+    try {
+      console.log('Fetching responses for question ID:', questionId);
+      const responseReponses = await axios.get(`http://10.0.2.2:8000/api/displayreponse/${questionId}`);
+      if (responseReponses.status === 200 && responseReponses.data.reponses) {
+        console.log('Responses:', responseReponses.data.reponses);
+        const reps = responseReponses.data.reponses.map(rep => new Reponse(rep.id, rep.projet, rep.question_id, rep.conformite, rep.commentaire, rep.site));
+        console.log('Mapped responses:', reps);
+        setReponses(prevReponses => [...prevReponses, ...reps]);
+      } else {
+        console.log('Failed to fetch reponses. Response:', responseReponses);
+      }
+    } catch (error) {
+      console.error('Error fetching reponses:', error);
+    }
+  }
+  const updateReponse = async (item) => {
+    setSelectedReponse(item);
+    setConformite(item.conformite);
+    setCommentaire(item.commentaire);
+    setShowModal(true);
   };
 
+  const handleUpdate = async () => {
+    try {
+      setShowModal(false);
+      console.warn('Updating response:', conformite, commentaire);
+      const url = `http://10.0.2.2:8000/api/updatereponse/${selectedReponse.id}`;
+      const response = await axios.put(url, { conformite, commentaire });
+      if (response.status === 200) {
+        console.warn('Response updated successfully');
+        // Refresh data or perform other actions after successful update
+        const updatedReponse = new Reponse(selectedReponse.id, selectedReponse.projet, selectedReponse.question_id, conformite, commentaire, selectedReponse.site);
+        const updatedReponses = reponses.map(rep => rep.id === selectedReponse.id ? updatedReponse : rep);
+        setReponses(updatedReponses);
+      } else {
+        throw new Error('Failed to update response');
+      }
+    } catch (error) {
+      console.error('Error updating response:', error.message);
+    }
+  };
   return (
-    <View style={styles.container}>
-      <View style={styles.card}>
-        <View style={styles.cardContent}>
-          {/* <Text style={styles.title}>Customer Site:</Text> */}
-          <Text style={styles.title}>{customerSiteStructure}</Text>
-          {/* <Text style={styles.title}>Categorie:</Text> */}
-          <Text style={styles.title}>{categorieStructure}</Text>
-          <Text style={styles.subtitle}>Questions:</Text>
-        </View>
+    <ScrollView style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.title}>{customerSiteStructure}</Text>
+        <Text style={styles.title}>{categorieStructure}</Text>
+        <Text style={styles.subtitle}>Questions:</Text>
       </View>
-
-      {/* Replace ScrollView with FlatList */}
       <FlatList
-        horizontal={true} // Set to true for horizontal scrolling
+        horizontal
         data={questions}
         renderItem={({ item }) => (
           <TouchableOpacity
             style={styles.questionItem}
-            onPress={() => handleQuestionPress(item)}
+            onPress={() => navigation.navigate('ReponseScreen', { questionId: item.id })}
           >
             <View style={styles.card}>
-              <View style={styles.detailsContainer}>
-                <View style={styles.detailRow}>
-                  <View style={styles.detailItem}>
-                    <Text style={styles.detailLabel}>ordre:</Text>
-                    <Text style={styles.detailValue}>{item.ordre}</Text>
-                  </View>
-                  <View style={styles.detailItem}>
-                    <Text style={styles.detailLabel}>Ref:</Text>
-                    <Text style={styles.detailValue}>{item.Ref}</Text>
-                  </View>
-                  <View style={styles.detailItem}>
-                    <Text style={styles.detailLabel}>Question:</Text>
-                    <Text style={styles.detailValue}>{item.Question}</Text>
-                  </View>
-                </View>
+              <View style={styles.cardContent}>
+                <Text style={styles.detailValue}>{item.Question}</Text>
               </View>
             </View>
+            <ScrollView>
+              {reponses
+                .filter(response => response.question_id === item.id)
+                .map((response, index) => (
+                  <View key={index} style={styles.responseContainer}>
+                    <Text style={styles.responseText}>Projet: {response.projet}</Text>
+                    <Text style={styles.responseText}>Question ID: {response.question_id}</Text>
+                    {/* Radio button group */}
+                    <RadioButton.Group
+                      onValueChange={newValue => {
+                        setSelectedValue(newValue); // Update selected value
+                        // You can add logic here to update the response based on the selected value
+                      }}
+                      value={selectedValue}
+                    >
+                      <View style={styles.radioButtonContainer}>
+                        <Text style={styles.radioButtonLabel}>Conforme</Text>
+                        <RadioButton value="on" />
+                      </View>
+                      <View style={styles.radioButtonContainer}>
+                        <Text style={styles.radioButtonLabel}>Non conforme</Text>
+                        <RadioButton value="off" />
+                      </View>
+                    </RadioButton.Group>
+                    <Text style={styles.responseText}>Constat d'audit: {response.commentaire}</Text>
+                    <Text style={styles.responseText}>Site: {response.site}</Text>
+                    <Button title="Constat d'audit" onPress={() => updateReponse(response)} />
+                  </View>
+                ))}
+            </ScrollView>
           </TouchableOpacity>
         )}
         keyExtractor={(item, index) => index.toString()}
-        showsHorizontalScrollIndicator={false} // Disable default horizontal scroll indicator
-        contentContainerStyle={styles.contentContainer} // Apply styling
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.contentContainer}
       />
-
+      {/* Right arrow indicator */}
       <View style={styles.scrollIndicatorContainer}>
         <Image
-          source={require('../assets/images/right-arrow.png')} // Replace with your arrow icon
+          source={require('../assets/images/right-arrow.png')}
           style={styles.scrollIndicator}
         />
       </View>
-
+      {/* Modal for updating response */}
+      <Modal visible={showModal} transparent={true}>
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            {/* <TextInput
+              style={styles.input}
+              placeholder="Enter Conformite"
+              value={conformite.toString()} // Convert to string
+              onChangeText={(text) => setConformite(text)}
+            /> */}
+            <TextInput
+              style={styles.input}
+              placeholder="Enter Commentaire"
+              value={commentaire.toString()} // Convert to string
+              onChangeText={(text) => setCommentaire(text)}
+            />
+            <Button title='Update' onPress={handleUpdate} />
+            <Button title='Close' onPress={() => setShowModal(false)} />
+          </View>
+        </View>
+      </Modal>
+      <Button onPress={() => navigation.goBack()} title="Close" />
       <View style={styles.footer}>
         <CustomHeader />
       </View>
-    </View>
+    </ScrollView>
   );
+
+  
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#fff',
+  },
+  header: {
+    padding: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+  },
+  radioButtonContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10, // Add margin for spacing
+  },
+  centeredView: {
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalView: {
+    backgroundColor: '#007bff',
+    padding: 20,
+    borderRadius: 10,
+    shadowColor:"#fff",
+    shadowOpacity:0.60,
+    elevation: 5,
+  },
+  radioButtonOption: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginRight: 20, // Adjust as needed for spacing between options
+  },
+  radioButtonLabel: {
+    marginRight: 10, 
+    color: 'black',// Add margin between label and button
   },
   title: {
     fontSize: 24,
@@ -141,7 +269,6 @@ const styles = StyleSheet.create({
     color: 'green',
   },
   card: {
-    flexDirection: 'row',
     marginBottom: 40,
     backgroundColor: '#fff',
     borderRadius: 10,
@@ -149,11 +276,16 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     width: '100%', // Set card width to cover entire screen
   },
-  detailLabel: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    color: 'blue',
-    marginBottom: 5,
+  scrollIndicatorContainer: {
+    position: 'absolute',
+    right: 10,
+    top: '20%',
+    transform: [{ translateY: -10 }],
+  },
+  scrollIndicator: {
+    width: 20, // Adjust the width
+    height: 20, // Adjust the height
+    resizeMode: 'contain',
   },
   detailValue: {
     fontSize: 14,
@@ -172,20 +304,27 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
   },
+  input: {
+    height: 40,
+    width: '80%',
+    marginVertical: 10,
+    borderWidth: 1,
+    padding: 10,
+  },
   contentContainer: {
     flexGrow: 1,
     justifyContent: 'center',
   },
-  scrollIndicatorContainer: {
-    position: 'absolute',
-    right: 10,
-    top: '50%',
-    transform: [{ translateY: -10 }],
+  responseContainer: {
+    marginVertical: 30,
+    padding: 10,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
   },
-  scrollIndicator: {
-    width: 30,
-    height: 30,
-    resizeMode: 'contain',
+  responseText: {
+    marginBottom: 5,
+    color: 'black',
   },
 });
 
