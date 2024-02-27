@@ -4,6 +4,7 @@ import axios from 'axios';
 import CustomHeader from '../components/CustomHeader';
 import { useNavigation } from '@react-navigation/native';
 import {  RadioButton } from 'react-native-paper'; 
+import CustomButton from '../components/CustomButton';
 class Question {
   constructor(id, ordre, Ref, Question, categorie_id) {
     this.id = id;
@@ -135,7 +136,7 @@ const QuestionScreen = ({ route }) => {
         renderItem={({ item }) => (
           <TouchableOpacity
             style={styles.questionItem}
-            onPress={() => navigation.navigate('ReponseScreen', { questionId: item.id })}
+            // onPress={() => navigation.navigate('ReponseScreen', { questionId: item.id })}
           >
             <View style={styles.card}>
               <View style={styles.cardContent}>
@@ -143,35 +144,42 @@ const QuestionScreen = ({ route }) => {
               </View>
             </View>
             <ScrollView>
-              {reponses
-                .filter(response => response.question_id === item.id)
-                .map((response, index) => (
-                  <View key={index} style={styles.responseContainer}>
-                    <Text style={styles.responseText}>Projet: {response.projet}</Text>
-                    <Text style={styles.responseText}>Question ID: {response.question_id}</Text>
-                    {/* Radio button group */}
-                    <RadioButton.Group
-                      onValueChange={newValue => {
-                        setSelectedValue(newValue); // Update selected value
-                        // You can add logic here to update the response based on the selected value
-                      }}
-                      value={selectedValue}
-                    >
-                      <View style={styles.radioButtonContainer}>
-                        <Text style={styles.radioButtonLabel}>Conforme</Text>
-                        <RadioButton value="on" />
-                      </View>
-                      <View style={styles.radioButtonContainer}>
-                        <Text style={styles.radioButtonLabel}>Non conforme</Text>
-                        <RadioButton value="off" />
-                      </View>
-                    </RadioButton.Group>
-                    <Text style={styles.responseText}>Constat d'audit: {response.commentaire}</Text>
-                    <Text style={styles.responseText}>Site: {response.site}</Text>
-                    <Button title="Constat d'audit" onPress={() => updateReponse(response)} />
-                  </View>
-                ))}
-            </ScrollView>
+  {reponses
+    .filter(response => response.question_id === item.id)
+    .map((response, index) => (
+      <View key={index} style={styles.responseContainer}>
+        <View style={styles.responseRow}>
+          <Text style={styles.responseText}>Projet: {response.projet}</Text>
+          <Text style={styles.responseText}>Question ID: {response.question_id}</Text>
+          {/* Radio button group */}
+          <RadioButton.Group
+            onValueChange={newValue => {
+              setSelectedValue(newValue); // Update selected value
+              // You can add logic here to update the response based on the selected value
+            }}
+            value={selectedValue}
+          >
+            <View style={styles.radioButtonContainer}>
+              <Text style={styles.radioButtonLabel}>Conforme</Text>
+              <RadioButton value="on" />
+            </View>
+            <View style={styles.radioButtonContainer}>
+              <Text style={styles.radioButtonLabel}>Non conforme</Text>
+              <RadioButton value="off" />
+            </View>
+          </RadioButton.Group>
+          <Text style={styles.responseText}>Constat d'audit: {response.commentaire}</Text>
+          <Text style={styles.responseText}>Site: {response.site}</Text>
+          <Image source={require('../assets/images/neon-camera-icon.png')} style={styles.cameraLogo} />
+          <CustomButton title="Constat d'audit" onPress={() => updateReponse(response)} />
+
+        </View>
+       
+      </View>
+    ))}
+</ScrollView>
+
+
           </TouchableOpacity>
         )}
         keyExtractor={(item, index) => index.toString()}
@@ -226,6 +234,19 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
   },
+  cameraLogo: {
+    width: 100, // Adjust the width of the camera logo image
+    height: 100, // Adjust the height of the camera logo image
+    resizeMode: 'contain',
+    marginTop: 10, // Add margin top to create space between the response row and the camera logo
+  },
+  
+  responseHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  
   radioButtonContainer: {
     flexDirection: 'row',
     alignItems: 'center',
