@@ -35,7 +35,7 @@ const CameraApp = () => {
     };
 
     launchCamera(options, (response) => {
-      console.log('Camera response:', response); // Log the response from camera
+      console.log('Camera response:', response); // added Log for the response from camera
       if (response.didCancel) {
         console.log('User cancelled camera');
       } else if (response.error) {
