@@ -11,6 +11,7 @@ import CategoryScreen from './screens/CategoryScreen';
 import QuestionScreen from './screens/QuestionScreen';
 import ReponseScreen from './screens/ReponseScreen';
 import SearchCustomerScreen from './screens/SearchCustomerScreen';
+import CameraApp from './screens/camera';
 const Stack = createStackNavigator();
 
 const Navigation = () => {
@@ -26,6 +27,7 @@ const Navigation = () => {
         <Stack.Screen name="QuestionScreen" component={QuestionScreen} />
         <Stack.Screen name="ReponseScreen" component={ReponseScreen} />
         <Stack.Screen name="SearchCustomerScreen" component={SearchCustomerScreen} />
+        <Stack.Screen name="camera" component={CameraApp} />
       </Stack.Navigator>
     </NavigationContainer>
   );

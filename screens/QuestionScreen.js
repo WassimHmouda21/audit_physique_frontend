@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, FlatList, Button, Image, Modal,ScrollView,TextInput  } from 'react-native';
 import axios from 'axios';
+
 import CustomHeader from '../components/CustomHeader';
 import { useNavigation } from '@react-navigation/native';
 import {  RadioButton } from 'react-native-paper'; 
@@ -103,7 +104,11 @@ const QuestionScreen = ({ route }) => {
     setCommentaire(item.commentaire);
     setShowModal(true);
   };
-
+  const handlePress = () => {
+    // Implement your logic here
+    console.log('Image pressed');
+    navigation.navigate('camera');
+  };
   const handleUpdate = async () => {
     try {
       setShowModal(false);
@@ -170,7 +175,12 @@ const QuestionScreen = ({ route }) => {
           </RadioButton.Group>
           <Text style={styles.responseText}>Constat d'audit: {response.commentaire}</Text>
           <Text style={styles.responseText}>Site: {response.site}</Text>
-          <Image source={require('../assets/images/neon-camera-icon.png')} style={styles.cameraLogo} />
+          <TouchableOpacity onPress={handlePress}>
+      <Image
+        source={require('../assets/images/neon-camera-icon.png')}
+        style={styles.cameraLogo}
+      />
+    </TouchableOpacity>
           <CustomButton title="Constat d'audit" onPress={() => updateReponse(response)} />
 
         </View>
