@@ -33,7 +33,7 @@ const SurveyScreen = ({ route }) => {
   }, [customerId]);
   return (
     <View style={styles.container}>
-        <Text style={styles.infoText}>Your customer today is</Text>
+     
       {customer && customer.Logo ? (
         <View style={styles.logoContainer}>
           <Image
@@ -49,74 +49,26 @@ const SurveyScreen = ({ route }) => {
       )}
       {customer && (
         <View style={styles.card}>
-        
           <View style={styles.detailsContainer}>
             <View style={styles.detailRow}>
               <View style={styles.detailItem}>
                 <Text style={styles.detailLabel}>SN:</Text>
                 <Text style={styles.detailValue}>{customer.SN}</Text>
               </View>
-              <View style={styles.detailItem}>
-                <Text style={styles.detailLabel}>LN:</Text>
-                <Text style={styles.detailValue}>{customer.LN}</Text>
-              </View>
-              <View style={styles.detailItem}>
-                <Text style={styles.detailLabel}>Description:</Text>
-                <Text style={styles.detailValue}>{customer.Description}</Text>
-              </View>
-              </View>
-              <View style={styles.detailRow}>
-              <View style={styles.detailItem}>
-              <Text style={styles.detailLabel}>SecteurActivite:</Text>
-                <Text style={styles.detailValue}>{customer.SecteurActivite}</Text>
-              {/* Add the fourth field here */}
+              {/* Add other rows of fields here */}
             </View>
-           
-          
-              <View style={styles.detailItem}>
-                <Text style={styles.detailLabel}>Categorie:</Text>
-                <Text style={styles.detailValue}>{customer.Categorie}</Text>
-              </View>
-              <View style={styles.detailItem}>
-                <Text style={styles.detailLabel}>Site_Web:</Text>
-                <Text style={styles.detailValue}>{customer.Site_Web}</Text>
-              </View>
-              </View>
-              <View style={styles.detailRow}>
-              <View style={styles.detailItem}>
-                <Text style={styles.detailLabel}>Adresse_mail:</Text>
-                <Text style={styles.detailValue}>{customer.Adresse_mail}</Text>
-              </View>
-              <Text style={styles.detailLabel}>Organigramme:</Text>
-                <Text style={styles.detailValue}>{customer.Organigramme}</Text>
-              {/* Add the fourth field here */}
-            </View>
-            
-           
-              
-              </View>
-              <View style={styles.detailRow}>
-              <View style={styles.detailItem}>
-                <Text style={styles.detailLabel}>Type:</Text>
-                <Text style={styles.detailValue}>{customer.Type}</Text>
-              </View>
-              <View style={styles.detailItem}>
-                <Text style={styles.detailLabel}>Network_Design:</Text>
-                <Text style={styles.detailValue}>{customer.Network_Design}</Text>
-              </View>
-            
-            
-            {/* Add other rows of fields here */}
+            <CustomButton title="Join Survey Project" onPress={handletheMissingInspectionsPress} />
           </View>
-          <CustomButton title="Join Survey Project" onPress={handletheMissingInspectionsPress} />
         </View>
       )}
+       <Text style={styles.infoText}>associated pojects :</Text>
       <StatusBar style="auto" />
       <View style={styles.footer}>
         <CustomHeader />
       </View>
     </View>
   );
+  
 };
 
 const styles = StyleSheet.create({
