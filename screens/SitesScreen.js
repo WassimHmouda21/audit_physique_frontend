@@ -57,7 +57,10 @@ const SitesScreen = ({ route, navigation }) => {
     
     // Navigate to CategoryScreen and pass the site ID as a parameter
     console.log("Navigating to CategoryScreen with site ID:", customerSite.id);
-    navigation.navigate('CategoryScreen', { siteId: customerSite.id });
+
+    console.log("Customer ID:", customerId);
+ 
+    navigation.navigate('CategoryScreen', { siteId: customerSite.id,customerId: customerId  });
   };
   
 
