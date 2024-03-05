@@ -97,7 +97,7 @@ const SitesScreen = ({ route, navigation }) => {
                 <View style={styles.labelValueContainer}>
                   <View style={styles.rectangle} />
                   <View style={styles.detailRow}>
-                    <Text style={[styles.detailLabel, { color: 'blue' }]}>Numero_site:</Text>
+                    <Text style={[styles.detailLabel, { color: 'blue' }]}>site </Text>
                     <Text style={[styles.detailValue]}>{site.Numero_site}</Text>
                   </View>
                 </View>
@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 10,
     textAlign: 'center',
-    color: 'green',
+    color: '#DAA520',
     marginLeft: 30
   },
   infoTexte: {

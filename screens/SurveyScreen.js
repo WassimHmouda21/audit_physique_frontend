@@ -73,7 +73,7 @@ const SurveyScreen = ({ route }) => {
               <ScrollView style={styles.scrollView}>
         <View style={styles.card}>
           <View style={styles.detailsContainer}>
-            <View style={styles.detailRow}>
+            <View style={styles.detailRowe}>
               <View style={styles.detailItem}>
                 <Text style={styles.detailLabel}>SN:</Text>
                 <Text style={styles.detailValue}>{customer.SN}</Text>
@@ -158,6 +158,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 10,
+    paddingHorizontal: 50,
+  },
+   detailRowe: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 10,
+    paddingHorizontal: 150,
   },
   detailItem: {
     flex: 1,
@@ -179,7 +186,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 10,
     textAlign: 'center',
-    color: 'green',
+    color: '#DAA520',
   },
 });
 

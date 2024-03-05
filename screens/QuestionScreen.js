@@ -297,7 +297,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 5,
     textAlign: 'center',
-    color: 'green',
+    color: '#DAA520',
   },
   card: {
     marginBottom: 40,

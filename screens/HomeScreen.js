@@ -81,9 +81,9 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: '#ffffff',
     borderRadius: 10,
-    padding: 20,
-    flexDirection: 'row',
-    alignItems: 'center',
+    padding: 3,
+    flexDirection: 'row-reverse',
+    alignItems: 'baseline',
     elevation: 3,
     shadowColor: '#000000',
     shadowOffset: {
@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   dateText: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 10,
     marginRight: 5,
@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
   //   fontSize: 16,
   // },
   infoText: {
-    fontSize: 14,
+    fontSize: 17,
     marginBottom: 5,
   },
   labelStyle: {
