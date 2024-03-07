@@ -3,10 +3,11 @@ import { Button, Image, View } from 'react-native';
 import { launchImageLibrary, launchCamera } from 'react-native-image-picker';
 import RNFS from 'react-native-fs';
 
-const App = () => {
+const CameraApp = () => {
   const [selectedImage, setSelectedImage] = useState(null);
 
   const openImagePicker = () => {
+    console.log('Opening image picker...');
     const options = {
       mediaType: 'photo',
       includeBase64: false,
@@ -15,12 +16,14 @@ const App = () => {
     };
 
     launchImageLibrary(options, (response) => {
+      console.log('Image picker response:', response);
       if (response.didCancel) {
         console.log('User cancelled image picker');
       } else if (response.error) {
-        console.log('Image picker error: ', response.error);
+        console.log('Image picker error:', response.error);
       } else {
-        let imageUri = response.uri || response.assets?.[0]?.uri;
+        let imageUri = response.uri || (response.assets?.[0]?.uri);
+        console.log('Selected image URI:', imageUri);
         setSelectedImage(imageUri);
         saveImageToFileSystem(imageUri); // Call function to save image
       }
@@ -28,6 +31,7 @@ const App = () => {
   };
   
   const handleCameraLaunch = () => {
+    console.log('Launching camera...');
     const options = {
       mediaType: 'photo',
       includeBase64: false,
@@ -36,13 +40,14 @@ const App = () => {
     };
   
     launchCamera(options, response => {
-      console.log('Response = ', response);
+      console.log('Camera response:', response);
       if (response.didCancel) {
         console.log('User cancelled camera');
       } else if (response.error) {
-        console.log('Camera Error: ', response.error);
+        console.log('Camera Error:', response.error);
       } else {
-        let imageUri = response.uri || response.assets?.[0]?.uri;
+        let imageUri = response.uri || (response.assets?.[0]?.uri);
+        console.log('Captured image URI:', imageUri);
         setSelectedImage(imageUri);
         saveImageToFileSystem(imageUri); // Call function to save image
       }
@@ -50,8 +55,10 @@ const App = () => {
   };
 
   const saveImageToFileSystem = async (imageUri) => {
+    console.log('Saving image to file system...');
     try {
-      const destPath = `${RNFS.DocumentDirectoryPath}/selectedImage.jpg`;
+      const fileName = imageUri.split('/').pop();
+      const destPath = `${RNFS.PicturesDirectoryPath}/${fileName}`;
       await RNFS.copyFile(imageUri, destPath);
       console.log('Image saved to file system:', destPath);
     } catch (error) {
@@ -78,4 +85,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default CameraApp;
