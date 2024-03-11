@@ -75,7 +75,7 @@ const SurveyScreen = ({ route }) => {
           <View style={styles.detailsContainer}>
             <View style={styles.detailRowe}>
               <View style={styles.detailItem}>
-                <Text style={styles.detailLabel}>SN:</Text>
+                {/* <Text style={styles.detailLabel}>SN:</Text> */}
                 <Text style={styles.detailValue}>{customer.SN}</Text>
               </View>
             </View>
@@ -171,13 +171,13 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   detailLabel: {
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: 'bold',
     color: 'blue',
     marginBottom: 5,
   },
   detailValue: {
-    fontSize: 14,
+    fontSize: 16,
     color: 'black',
     marginBottom: 10,
   },

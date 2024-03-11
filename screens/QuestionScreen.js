@@ -282,7 +282,7 @@ const styles = StyleSheet.create({
     marginRight: 20, // Adjust as needed for spacing between options
   },
   radioButtonLabel: {
-    marginRight: 10, 
+    marginRight: 14, 
     color: 'black',// Add margin between label and button
   },
   title: {
@@ -319,7 +319,7 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   detailValue: {
-    fontSize: 14,
+    fontSize: 16,
     color: 'black', // Set text color to black
   },
   questionItem: {
@@ -355,6 +355,7 @@ const styles = StyleSheet.create({
   },
   responseText: {
     marginBottom: 5,
+    fontSize: 16,
     color: 'black',
   },
 });

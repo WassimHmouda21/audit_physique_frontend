@@ -194,10 +194,12 @@ const styles = StyleSheet.create({
   },
   detailLabel: {
     fontWeight: 'bold',
+    fontSize: 16,
     color: 'blue',
   },
   detailValue: {
     marginLeft: 5,
+    fontSize: 16,
     color: 'black',
     flexWrap: 'wrap', // Allow text to wrap to the next line if it exceeds the width
     flex: 1, // Allow the text to expand to take up available space
