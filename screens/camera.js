@@ -25,7 +25,7 @@ const CameraApp = () => {
         let imageUri = response.uri || (response.assets?.[0]?.uri);
         console.log('Selected image URI:', imageUri);
         setSelectedImage(imageUri);
-        saveImageToFileSystem(imageUri); // Call function to save image
+        sendImageToBackend(imageUri); // Call function to send image to backend
       }
     });
   };
@@ -49,22 +49,73 @@ const CameraApp = () => {
         let imageUri = response.uri || (response.assets?.[0]?.uri);
         console.log('Captured image URI:', imageUri);
         setSelectedImage(imageUri);
-        saveImageToFileSystem(imageUri); // Call function to save image
+        sendImageToBackend(imageUri); // Call function to send image to backend
       }
     });
   };
 
-  const saveImageToFileSystem = async (imageUri) => {
-    console.log('Saving image to file system...');
-    try {
-      const fileName = imageUri.split('/').pop();
-      const destPath = `${RNFS.PicturesDirectoryPath}/${fileName}`;
-      await RNFS.copyFile(imageUri, destPath);
-      console.log('Image saved to file system:', destPath);
-    } catch (error) {
-      console.log('Error saving image to file system:', error);
-    }
-  };
+//  const sendImageToBackend = async (imageUri) => {
+//     console.log('Sending image to backend...');
+//     try {
+//       const formData = new FormData();
+//       formData.append('image', {
+//         uri: imageUri,
+//         type: 'image/jpeg',
+//         name: 'image.jpg',
+//       });
+
+//       console.log('Form Data:', formData);
+
+//       const response = await fetch('http://10.0.2.2:8000/api/addIma', {
+//         method: 'POST',
+//         body: formData,
+//       });
+
+//       console.log('Response:', response);
+
+//       if (!response.ok) {
+//         console.error('Failed to upload image');
+//         throw new Error('Failed to upload image');
+//       }
+
+//       console.log('Image uploaded successfully');
+//     } catch (error) {
+//       console.error('Error uploading image:', error);
+//     }
+//   };
+
+const sendImageToBackend = async (imageUri) => {
+  console.log('Sending image to backend...');
+  try {
+      const formData = new FormData();
+      formData.append('image', {
+          uri: imageUri,
+          type: 'image/jpeg',
+          name: 'image.jpg',
+      });
+      // Add the reponse_id to the form data
+      // formData.append('reponse_id', reponseId); // Replace reponseId with the actual value
+
+      console.log('Form Data:', formData);
+
+      const response = await fetch('http://10.0.2.2:8000/api/addIma', {
+          method: 'POST',
+          body: formData,
+      });
+
+      console.log('Response:', response);
+
+      if (!response.ok) {
+          console.error('Failed to upload image');
+          throw new Error('Failed to upload image');
+      }
+
+      console.log('Image uploaded successfully');
+  } catch (error) {
+      console.error('Error uploading image:', error);
+  }
+};
+
 
   return (
     <View style={{ flex: 1, justifyContent: 'center' }}>
