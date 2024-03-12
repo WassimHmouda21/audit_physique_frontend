@@ -104,11 +104,20 @@ const QuestionScreen = ({ route }) => {
     setCommentaire(item.commentaire);
     setShowModal(true);
   };
-  const handlePress = () => {
-    // Implement your logic here
-    console.log('Image pressed');
-    navigation.navigate('camera');
+  // const handlePress = (reponse) => {
+  //   // Implement your logic here
+  //   console.log("Navigating to QuestionScreen with reponse ID:", reponse.id);
+  //   console.log('Image pressed');
+  //   navigation.navigate('camera', { reponseId: reponse.id});
+   
+  // };
+
+  const handlePress = (reponse) => {
+    console.log("Navigating to CameraScreen with response ID:", reponse.id);
+    navigation.navigate('CameraScreen', { reponseId: reponse.id }); // Navigate to CameraScreen with reponseId
   };
+  
+  
   const handleUpdate = async () => {
     try {
       setShowModal(false);
@@ -175,7 +184,7 @@ const QuestionScreen = ({ route }) => {
           </RadioButton.Group>
           <Text style={styles.responseText}>Constat d'audit: {response.commentaire}</Text>
           <Text style={styles.responseText}>Site: {response.site}</Text>
-          <TouchableOpacity onPress={handlePress}>
+          <TouchableOpacity onPress={() => handlePress(response)}>
       <Image
         source={require('../assets/images/neon-camera-icon.png')}
         style={styles.cameraLogo}

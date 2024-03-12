@@ -1,10 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState , useEffect} from 'react';
 import { Button, Image, View } from 'react-native';
 import { launchImageLibrary, launchCamera } from 'react-native-image-picker';
 import RNFS from 'react-native-fs';
-
-const CameraApp = () => {
+import { useNavigation } from '@react-navigation/native';
+const CameraApp = ({ route }) => {
   const [selectedImage, setSelectedImage] = useState(null);
+  const { reponseId } = route.params;
+  const navigation = useNavigation(); 
+
+  useEffect(() => {
+    console.log('CameraApp - Received reponseId:', reponseId);
+  }, [reponseId]);
 
   const openImagePicker = () => {
     console.log('Opening image picker...');
@@ -84,38 +90,74 @@ const CameraApp = () => {
 //     }
 //   };
 
+// const sendImageToBackend = async (imageUri) => {
+//   console.log('Sending image to backend...');
+//   try {
+//       const formData = new FormData();
+//       formData.append('image', {
+//           uri: imageUri,
+//           type: 'image/jpeg',
+//           name: 'image.jpg',
+//       });
+//       // Add the reponse_id to the form data
+//       // formData.append('reponse_id', reponseId); // Replace reponseId with the actual value
+
+//       console.log('Form Data:', formData);
+
+//       const response = await fetch('http://10.0.2.2:8000/api/addIma', {
+//           method: 'POST',
+//           body: formData,
+//       });
+
+//       console.log('Response:', response);
+
+//       if (!response.ok) {
+//           console.error('Failed to upload image');
+//           throw new Error('Failed to upload image');
+//       }
+
+//       console.log('Image uploaded successfully');
+//   } catch (error) {
+//       console.error('Error uploading image:', error);
+//   }
+// };
+
 const sendImageToBackend = async (imageUri) => {
   console.log('Sending image to backend...');
+  console.log('reponseId:', reponseId); // Ensure reponseId is accessible here
   try {
-      const formData = new FormData();
-      formData.append('image', {
-          uri: imageUri,
-          type: 'image/jpeg',
-          name: 'image.jpg',
-      });
-      // Add the reponse_id to the form data
-      // formData.append('reponse_id', reponseId); // Replace reponseId with the actual value
+    const formData = new FormData();
+    formData.append('image', {
+      uri: imageUri,
+      type: 'image/jpeg',
+      name: 'image.jpg',
+    });
+    console.log("reponse id***", reponseId)
+    // Append the reponse_id to the form data
+    formData.append('reponse_id', reponseId);
 
-      console.log('Form Data:', formData);
+    console.log('Form Data:', formData);
 
-      const response = await fetch('http://10.0.2.2:8000/api/addIma', {
-          method: 'POST',
-          body: formData,
-      });
+    const response = await fetch('http://10.0.2.2:8000/api/addIma', {
+      method: 'POST',
+      body: formData,
+    });
 
-      console.log('Response:', response);
+    console.log('Response:', response);
 
-      if (!response.ok) {
-          console.error('Failed to upload image');
-          throw new Error('Failed to upload image');
-      }
+    if (!response.ok) {
+      console.error('Failed to upload image');
+      throw new Error('Failed to upload image');
+    }
 
-      console.log('Image uploaded successfully');
+    const responseData = await response.json(); // Parse response JSON
+    console.log('Response Data:', responseData);
+
+    console.log('Image uploaded successfully');
   } catch (error) {
-      console.error('Error uploading image:', error);
+    console.error('Error uploading image:', error);
   }
 };
-
 
   return (
     <View style={{ flex: 1, justifyContent: 'center' }}>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, FlatList } from 'react-native';
+import { View, Text, StyleSheet, Image, FlatList ,StatusBar } from 'react-native';
 import axios from 'axios';
-
+import CustomHeader from '../components/CustomHeader';
 const AlbumScreen = () => {
   const [images, setImages] = useState([]);
 
@@ -46,6 +46,10 @@ const AlbumScreen = () => {
       ) : (
         <Text>No images available</Text>
       )}
+      <StatusBar style="auto" />
+      <View style={styles.footer}>
+        <CustomHeader />
+      </View>
     </View>
   );
 };
@@ -65,6 +69,12 @@ const styles = StyleSheet.create({
     width: 200,
     height: 200,
     marginVertical: 10,
+  },
+  footer: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
   },
 });
 

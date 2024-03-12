@@ -27,7 +27,7 @@ const Navigation = () => {
         <Stack.Screen name="QuestionScreen" component={QuestionScreen} />
         <Stack.Screen name="ReponseScreen" component={ReponseScreen} />
         <Stack.Screen name="SearchCustomerScreen" component={SearchCustomerScreen} />
-        <Stack.Screen name="camera" component={CameraApp} />
+        <Stack.Screen name="CameraScreen" component={CameraApp} />
       </Stack.Navigator>
     </NavigationContainer>
   );
