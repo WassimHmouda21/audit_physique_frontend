@@ -188,38 +188,40 @@ const renderImage = ({ item }) => (
 
   
 
-  return (
-    <View style={styles.container}>
-      <Text>Images for reponse ID: {reponseId}</Text>
-      {images.length > 0 ? (
-        <FlatList
-          data={images}
-          renderItem={renderImage}
-          keyExtractor={(item, index) => index.toString()}
-          contentContainerStyle={styles.imageContainer}
-        />
-      ) : (
-        <Text>No images available</Text>
-      )}
-
-      <View style={{ flex: 1, justifyContent: 'center' }}>
-        {selectedImage && (
-          <Image
-            source={{ uri: selectedImage }}
-            style={{ flex: 1 }}
-            resizeMode="contain"
-          />
-        )}
-        <View style={{ marginTop: 20 }}>
-          <Button title="Choose from Device" onPress={openImagePicker} />
-        </View>
-        <View style={{ marginTop: 20, marginBottom: 50 }}>
-          <Button title="Open Camera" onPress={handleCameraLaunch} />
-        </View>
+return (
+  <View style={styles.container}>
+      <View style={{ marginTop: 20 }}>
+        <Button title="Choose from Device" onPress={openImagePicker} />
       </View>
+      <View style={{ marginTop: 20, marginBottom: 50 }}>
+        <Button title="Open Camera" onPress={handleCameraLaunch} />
+      </View>
+    <Text>Images for reponse ID: {reponseId}</Text>
+
+    <View style={{ flex: 1, justifyContent: 'center' }}>
+      {selectedImage && (
+        <Image
+          source={{ uri: selectedImage }}
+          style={{ flex: 1 }}
+          resizeMode="contain"
+        />
+      )}
+    
     </View>
-  );
-};
+
+    {images.length > 0 ? (
+      <FlatList
+        data={images}
+        renderItem={renderImage}
+        keyExtractor={(item, index) => index.toString()}
+        contentContainerStyle={styles.imageContainer}
+      />
+    ) : (
+      <Text>No images available</Text>
+    )}
+  </View>
+);
+    };
 const styles = StyleSheet.create({
   container: {
     flex: 1,
