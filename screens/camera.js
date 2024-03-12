@@ -1,16 +1,33 @@
-import React, { useState , useEffect} from 'react';
-import { Button, Image, View } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { Button, Image, View, FlatList, Text, StyleSheet } from 'react-native';
 import { launchImageLibrary, launchCamera } from 'react-native-image-picker';
-import RNFS from 'react-native-fs';
-import { useNavigation } from '@react-navigation/native';
+import axios from 'axios';
+
 const CameraApp = ({ route }) => {
   const [selectedImage, setSelectedImage] = useState(null);
+  const [images, setImages] = useState([]);
   const { reponseId } = route.params;
-  const navigation = useNavigation(); 
 
   useEffect(() => {
     console.log('CameraApp - Received reponseId:', reponseId);
+    fetchImages(); // Fetch images when reponseId changes
   }, [reponseId]);
+
+  const fetchImages = async () => {
+    try {
+      const response = await axios.get(`http://10.0.2.2:8000/api/images/${reponseId}`);
+      console.log(response.data);
+      
+      if (response.data.status === 200) {
+        // Set images state with response data
+        setImages(response.data.images);
+      } else {
+        console.log(response.data.message); // Log error message if status is not 200
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const openImagePicker = () => {
     console.log('Opening image picker...');
@@ -158,24 +175,67 @@ const sendImageToBackend = async (imageUri) => {
     console.error('Error uploading image:', error);
   }
 };
+console.log('Images state:', images);
+
+  
+const renderImage = ({ item }) => (
+  <Image
+    source={{ uri: `http://10.0.2.2:8000/${item.Path}` }}
+    style={styles.image}
+    onError={(error) => console.log('Image loading error:', error)}
+  />
+);
+
+  
 
   return (
-    <View style={{ flex: 1, justifyContent: 'center' }}>
-      {selectedImage && (
-        <Image
-          source={{ uri: selectedImage }}
-          style={{ flex: 1 }}
-          resizeMode="contain"
+    <View style={styles.container}>
+      <Text>Images for reponse ID: {reponseId}</Text>
+      {images.length > 0 ? (
+        <FlatList
+          data={images}
+          renderItem={renderImage}
+          keyExtractor={(item, index) => index.toString()}
+          contentContainerStyle={styles.imageContainer}
         />
+      ) : (
+        <Text>No images available</Text>
       )}
-      <View style={{ marginTop: 20 }}>
-        <Button title="Choose from Device" onPress={openImagePicker} />
-      </View>
-      <View style={{ marginTop: 20, marginBottom: 50 }}>
-        <Button title="Open Camera" onPress={handleCameraLaunch} />
+
+      <View style={{ flex: 1, justifyContent: 'center' }}>
+        {selectedImage && (
+          <Image
+            source={{ uri: selectedImage }}
+            style={{ flex: 1 }}
+            resizeMode="contain"
+          />
+        )}
+        <View style={{ marginTop: 20 }}>
+          <Button title="Choose from Device" onPress={openImagePicker} />
+        </View>
+        <View style={{ marginTop: 20, marginBottom: 50 }}>
+          <Button title="Open Camera" onPress={handleCameraLaunch} />
+        </View>
       </View>
     </View>
   );
 };
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 20,
+  },
+  imageContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  image: {
+    width: 200,
+    height: 200,
+    margin: 5,
+  },
+});
 
 export default CameraApp;
