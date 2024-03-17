@@ -59,7 +59,7 @@ const HomeScreen = () => {
         <CustomButton title="audit physique à faire" onPress={handleMissingInspectionsPress} />
         <View style={{ marginVertical: 10 }}> 
         </View> 
-        <Image source={require('../assets/images/illustration_survey.jpg')} style={{ width: 350, height: 350 }} />
+        <Image source={require('../assets/images/illustration_survey.jpg')} style={{ width: 350, height: 200 }} />
       </View>
       <View style={styles.blankSpace} />
     </View>

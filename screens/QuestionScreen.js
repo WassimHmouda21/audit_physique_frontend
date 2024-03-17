@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, FlatList, Button, Image, Modal,ScrollView,TextInput  } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, FlatList, Button, Image, Modal, ScrollView, TextInput, Alert } from 'react-native';
 import axios from 'axios';
 
 import CustomHeader from '../components/CustomHeader';
 import { useNavigation } from '@react-navigation/native';
-import {  RadioButton } from 'react-native-paper'; 
+import { RadioButton } from 'react-native-paper';
 import CustomButton from '../components/CustomButton';
+
 class Question {
   constructor(id, ordre, Ref, Question, categorie_id) {
     this.id = id;
@@ -37,8 +38,10 @@ const QuestionScreen = ({ route }) => {
   const [selectedValue, setSelectedValue] = useState('on');
   const [showModal, setShowModal] = useState(false);
   const [selectedReponse, setSelectedReponse] = useState(null);
+  const [projet, setProjet] = useState('');
   const [conformite, setConformite] = useState('');
   const [commentaire, setCommentaire] = useState('');
+  const [site, setSite] = useState('');
 
   useEffect(() => {
     async function fetchData() {
@@ -98,25 +101,56 @@ const QuestionScreen = ({ route }) => {
       console.error('Error fetching reponses:', error);
     }
   }
+
+  const handleSubmit = async (questionId) => {
+    try {
+        const response = await axios.post(`http://10.0.2.2:8000/api/reponses/${questionId}`, {
+            projet,
+            conformite,
+            commentaire,
+            site
+        });
+
+        console.log('Response from server:', response);
+
+        if (response.status === 201) {
+            const message = response.data.message;
+            const reponse_id = response.data.response.id; // Access the reponse_id from the response data
+
+            console.log('Received response ID:', reponse_id);
+
+            handlePress({ ...response.data.response, id: reponse_id }); // Pass the response ID as id
+            Alert.alert('Success', message);
+        } else {
+            Alert.alert('Error', 'Failed to create response');
+        }
+    } catch (error) {
+        console.error('Error creating response:', error);
+        Alert.alert('Error', 'Failed to create response');
+    }
+};
+
+
+  
+  
+  const handlePress = (reponse) => {
+    console.log("Handle Press function is called with response:", reponse);
+    const reponseId = reponse ? reponse.id : null;
+    console.log("Navigating to CameraScreen with response ID:", reponseId);
+    // Navigating from the QuestionScreen component
+    navigation.navigate('CameraScreen', { reponseId: reponseId });
+  };
+  
+  
+  
+  
+  
   const updateReponse = async (item) => {
     setSelectedReponse(item);
     setConformite(item.conformite);
     setCommentaire(item.commentaire);
     setShowModal(true);
   };
-  // const handlePress = (reponse) => {
-  //   // Implement your logic here
-  //   console.log("Navigating to QuestionScreen with reponse ID:", reponse.id);
-  //   console.log('Image pressed');
-  //   navigation.navigate('camera', { reponseId: reponse.id});
-   
-  // };
-
-  const handlePress = (reponse) => {
-    console.log("Navigating to CameraScreen with response ID:", reponse.id);
-    navigation.navigate('CameraScreen', { reponseId: reponse.id }); // Navigate to CameraScreen with reponseId
-  };
-  
   
   const handleUpdate = async () => {
     try {
@@ -126,7 +160,6 @@ const QuestionScreen = ({ route }) => {
       const response = await axios.put(url, { conformite, commentaire });
       if (response.status === 200) {
         console.warn('Response updated successfully');
-        // Refresh data or perform other actions after successful update
         const updatedReponse = new Reponse(selectedReponse.id, selectedReponse.projet, selectedReponse.question_id, conformite, commentaire, selectedReponse.site);
         const updatedReponses = reponses.map(rep => rep.id === selectedReponse.id ? updatedReponse : rep);
         setReponses(updatedReponses);
@@ -137,6 +170,7 @@ const QuestionScreen = ({ route }) => {
       console.error('Error updating response:', error.message);
     }
   };
+
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
@@ -150,7 +184,6 @@ const QuestionScreen = ({ route }) => {
         renderItem={({ item }) => (
           <TouchableOpacity
             style={styles.questionItem}
-            // onPress={() => navigation.navigate('ReponseScreen', { questionId: item.id })}
           >
             <View style={styles.card}>
               <View style={styles.cardContent}>
@@ -158,78 +191,104 @@ const QuestionScreen = ({ route }) => {
               </View>
             </View>
             <ScrollView>
-  {reponses
-    .filter(response => response.question_id === item.id)
-    .map((response, index) => (
-      <View key={index} style={styles.responseContainer}>
-        <View style={styles.responseRow}>
-          <Text style={styles.responseText}>Projet: {response.projet}</Text>
-          <Text style={styles.responseText}>Question ID: {response.question_id}</Text>
-          {/* Radio button group */}
-          <RadioButton.Group
-            onValueChange={newValue => {
-              setSelectedValue(newValue); // Update selected value
-              // You can add logic here to update the response based on the selected value
-            }}
-            value={selectedValue}
-          >
-            <View style={styles.radioButtonContainer}>
-              <Text style={styles.radioButtonLabel}>Conforme</Text>
-              <RadioButton value="on" />
-            </View>
-            <View style={styles.radioButtonContainer}>
-              <Text style={styles.radioButtonLabel}>Non conforme</Text>
-              <RadioButton value="off" />
-            </View>
-          </RadioButton.Group>
-          <Text style={styles.responseText}>Constat d'audit: {response.commentaire}</Text>
-          <Text style={styles.responseText}>Site: {response.site}</Text>
-          <TouchableOpacity onPress={() => handlePress(response)}>
+              {reponses
+                .filter(response => response.question_id === item.id)
+                .map((response, index) => (
+                  <View key={index} style={styles.responseContainer}>
+                    <View style={styles.responseRow}>
+                      <Text style={styles.responseText}>Projet: {response.projet}</Text>
+                      <Text style={styles.responseText}>Question ID: {response.question_id}</Text>
+                      <RadioButton.Group
+                        onValueChange={newValue => {
+                          setSelectedValue(newValue);
+                        }}
+                        value={selectedValue}
+                      >
+                        <View style={styles.radioButtonContainer}>
+                          <Text style={styles.radioButtonLabel}>Conforme</Text>
+                          <RadioButton value="on" />
+                        </View>
+                        <View style={styles.radioButtonContainer}>
+                          <Text style={styles.radioButtonLabel}>Non conforme</Text>
+                          <RadioButton value="off" />
+                        </View>
+                        <View style={styles.responseContainer}>
+                        <TouchableOpacity onPress={() => handlePress(response)}>
       <Image
         source={require('../assets/images/neon-camera-icon.png')}
         style={styles.cameraLogo}
       />
     </TouchableOpacity>
-          <CustomButton title="Constat d'audit" onPress={() => updateReponse(response)} />
-
-        </View>
-       
-      </View>
-    ))}
-</ScrollView>
 
 
+                        </View>
+                      </RadioButton.Group>
+                    </View>
+                  </View>
+                ))}
+              {reponses.every(response => response.question_id !== item.id) && (
+                <View style={styles.responseContainer}>
+                  <View style={styles.responseRow}>
+                    <TouchableOpacity onPress={() => handlePress(null)}>
+                      <Image
+                        source={require('../assets/images/neon-camera-icon.png')}
+                        style={styles.cameraLogo}
+                      />
+                    </TouchableOpacity>
+                    <View style={styles.textInputContainer}>
+                      <TextInput
+                        style={styles.input}
+                        placeholder="Projet"
+                        value={projet}
+                        onChangeText={text => setProjet(text)}
+                      />
+                      <TextInput
+                        style={styles.input}
+                        placeholder="Conformite"
+                        value={conformite}
+                        onChangeText={text => setConformite(text)}
+                      />
+                      <TextInput
+                        style={styles.input}
+                        placeholder="Commentaire"
+                        value={commentaire}
+                        onChangeText={text => setCommentaire(text)}
+                      />
+                      <TextInput
+                        style={styles.input}
+                        placeholder="Site"
+                        value={site}
+                        onChangeText={text => setSite(text)}
+                      />
+                      <Button title="Submit" onPress={() => handleSubmit(item.id)} />
+                    </View>
+                  </View>
+                </View>
+              )}
+            </ScrollView>
           </TouchableOpacity>
         )}
         keyExtractor={(item, index) => index.toString()}
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.contentContainer}
       />
-      {/* Right arrow indicator */}
       <View style={styles.scrollIndicatorContainer}>
         <Image
           source={require('../assets/images/right-arrow.png')}
           style={styles.scrollIndicator}
         />
       </View>
-      {/* Modal for updating response */}
       <Modal visible={showModal} transparent={true}>
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
-            {/* <TextInput
-              style={styles.input}
-              placeholder="Enter Conformite"
-              value={conformite.toString()} // Convert to string
-              onChangeText={(text) => setConformite(text)}
-            /> */}
             <TextInput
               style={styles.input}
               placeholder="Enter Commentaire"
-              value={commentaire.toString()} // Convert to string
-              onChangeText={(text) => setCommentaire(text)}
+              value={commentaire.toString()}
+              onChangeText={text => setCommentaire(text)}
             />
-            <Button title='Update' onPress={handleUpdate} />
-            <Button title='Close' onPress={() => setShowModal(false)} />
+            <Button title="Update" onPress={handleUpdate} />
+            <Button title="Close" onPress={() => setShowModal(false)} />
           </View>
         </View>
       </Modal>
@@ -239,8 +298,6 @@ const QuestionScreen = ({ route }) => {
       </View>
     </ScrollView>
   );
-
-  
 };
 
 const styles = StyleSheet.create({

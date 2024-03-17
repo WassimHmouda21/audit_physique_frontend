@@ -190,14 +190,14 @@ const renderImage = ({ item }) => (
 
 return (
   <View style={styles.container}>
-      <View style={{ marginTop: 20 }}>
+      {/* <View style={{ marginTop: 20 }}>
         <Button title="Choose from Device" onPress={openImagePicker} />
-      </View>
+      </View> */}
       <View style={{ marginTop: 20, marginBottom: 50 }}>
         <Button title="Open Camera" onPress={handleCameraLaunch} />
       </View>
-    <Text>Images for reponse ID: {reponseId}</Text>
-
+    {/* <Text>Images for reponse ID: {reponseId}</Text> */}
+    <Text style={styles.subtitle}>Captured photos</Text>
     <View style={{ flex: 1, justifyContent: 'center' }}>
       {selectedImage && (
         <Image
@@ -232,6 +232,13 @@ const styles = StyleSheet.create({
   imageContainer: {
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  subtitle: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    marginBottom: 5,
+    textAlign: 'center',
+    color: '#007bff',
   },
   image: {
     width: 200,
