@@ -29,6 +29,23 @@ const CameraApp = ({ route }) => {
     }
   };
 
+  const deleteImageById = async (id) => {
+    try {
+      const response = await axios.delete(`http://10.0.2.2:8000/api/deletimage/${id}`);
+      
+      if (response.data.status === 200) {
+        console.log('Image deleted successfully');
+        // Remove the deleted image from the state
+        setImages(images.filter(image => image.id !== id));
+      } else {
+        console.log(response.data.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+
   const openImagePicker = () => {
     console.log('Opening image picker...');
     const options = {
@@ -179,24 +196,23 @@ console.log('Images state:', images);
 
   
 const renderImage = ({ item }) => (
-  <Image
-    source={{ uri: `http://10.0.2.2:8000/${item.Path}` }}
-    style={styles.image}
-    onError={(error) => console.log('Image loading error:', error)}
-  />
+  <View style={styles.imageContainer}>
+    <Image
+      source={{ uri: `http://10.0.2.2:8000/${item.Path}` }}
+      style={styles.image}
+      onError={(error) => console.log('Image loading error:', error)}
+    />
+    <Button title="Delete" onPress={() => deleteImageById(item.id)} />
+  </View>
 );
 
   
 
 return (
   <View style={styles.container}>
-      {/* <View style={{ marginTop: 20 }}>
-        <Button title="Choose from Device" onPress={openImagePicker} />
-      </View> */}
-      <View style={{ marginTop: 20, marginBottom: 50 }}>
-        <Button title="Open Camera" onPress={handleCameraLaunch} />
-      </View>
-    {/* <Text>Images for reponse ID: {reponseId}</Text> */}
+    <View style={{ marginTop: 20, marginBottom: 50 }}>
+      <Button title="Open Camera" onPress={handleCameraLaunch} />
+    </View>
     <Text style={styles.subtitle}>Captured photos</Text>
     <View style={{ flex: 1, justifyContent: 'center' }}>
       {selectedImage && (
@@ -206,7 +222,6 @@ return (
           resizeMode="contain"
         />
       )}
-    
     </View>
 
     {images.length > 0 ? (
@@ -221,7 +236,8 @@ return (
     )}
   </View>
 );
-    };
+};
+   
 const styles = StyleSheet.create({
   container: {
     flex: 1,

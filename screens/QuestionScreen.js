@@ -212,6 +212,8 @@ const QuestionScreen = ({ route }) => {
                           <Text style={styles.radioButtonLabel}>Non conforme</Text>
                           <RadioButton value="off" />
                         </View>
+                        <Text style={styles.responseText}>Constat d'audit: {response.commentaire}</Text>
+
                         <View style={styles.responseContainer}>
                         <TouchableOpacity onPress={() => handlePress(response)}>
       <Image
