@@ -39,9 +39,18 @@ const QuestionScreen = ({ route }) => {
   const [showModal, setShowModal] = useState(false);
   const [selectedReponse, setSelectedReponse] = useState(null);
   const [projet, setProjet] = useState('');
-  const [conformite, setConformite] = useState('');
+  const [conformite, setConformite] = useState('2');
   const [commentaire, setCommentaire] = useState('');
   const [site, setSite] = useState('');
+  const [value, setValue] = useState(false); // Assuming value is a boolean state
+
+  const toggleSwitch = () => {
+    // Update the state value to its opposite value
+    setValue(!value);
+    // Update conformite based on the switch status
+    const newConformite = value ? '2' : '1'; // If true, set to '1', otherwise set to '2'
+    setConformite(newConformite);
+  };
 
   useEffect(() => {
     async function fetchData() {
@@ -142,7 +151,20 @@ const QuestionScreen = ({ route }) => {
   };
   
   
-  
+  const deleteReponseById = async (id) => {
+    try {
+      const response = await axios.delete(`http://10.0.2.2:8000/api/deletreponse/${id}`);
+      if (response.data.status === 200) {
+        console.log('Reponse deleted successfully');
+        // Remove the deleted response from the state
+        setReponses(reponses.filter(reponse => reponse.id !== id));
+      } else {
+        console.log(response.data.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   
   
   const updateReponse = async (item) => {
@@ -197,21 +219,19 @@ const QuestionScreen = ({ route }) => {
                   <View key={index} style={styles.responseContainer}>
                     <View style={styles.responseRow}>
                       <Text style={styles.responseText}>Projet: {response.projet}</Text>
-                      <Text style={styles.responseText}>Question ID: {response.question_id}</Text>
-                      <RadioButton.Group
-                        onValueChange={newValue => {
-                          setSelectedValue(newValue);
-                        }}
-                        value={selectedValue}
-                      >
-                        <View style={styles.radioButtonContainer}>
-                          <Text style={styles.radioButtonLabel}>Conforme</Text>
-                          <RadioButton value="on" />
-                        </View>
-                        <View style={styles.radioButtonContainer}>
-                          <Text style={styles.radioButtonLabel}>Non conforme</Text>
-                          <RadioButton value="off" />
-                        </View>
+                      {/* <Text style={styles.responseText}>Question ID: {response.question_id}</Text> */}
+                      {/* <Text style={styles.responseText}>Conformite: {response.conformite}</Text> */}
+{/* <Text style={styles.responseText}>
+  {response.conformite}
+</Text>
+<Text style={styles.responseText}>
+  {typeof response.conformite}
+</Text> */}
+<Text style={styles.responseText}>
+  {response.conformite === 1 ? 'Conformite: checked' : 'Conformite: non checked'}
+</Text>
+
+
                         <Text style={styles.responseText}>Constat d'audit: {response.commentaire}</Text>
 
                         <View style={styles.responseContainer}>
@@ -221,10 +241,13 @@ const QuestionScreen = ({ route }) => {
         style={styles.cameraLogo}
       />
     </TouchableOpacity>
+    <TouchableOpacity onPress={() => deleteReponseById(response.id)} style={styles.deleteButton}>
+                      <Text style={styles.deleteButtonText}>Delete response</Text>
+                    </TouchableOpacity>
 
 
                         </View>
-                      </RadioButton.Group>
+                   
                     </View>
                   </View>
                 ))}
@@ -244,12 +267,23 @@ const QuestionScreen = ({ route }) => {
                         value={projet}
                         onChangeText={text => setProjet(text)}
                       />
-                      <TextInput
+                      {/* <TextInput
                         style={styles.input}
                         placeholder="Conformite"
                         value={conformite}
                         onChangeText={text => setConformite(text)}
-                      />
+                      /> */}
+                       <Text style={styles.label}>Conformité</Text>
+      <TouchableOpacity onPress={toggleSwitch}>
+        <View style={styles.switchContainer}>
+          <View style={[styles.switchButton, { backgroundColor: value ? '#2ecc71' : '#e74c3c' }]}>
+            <View style={styles.switchIndicator} />
+          </View>
+        </View>
+      </TouchableOpacity>
+      {/* <Text style={styles.conformiteValue}>{conformite}</Text> */}
+    
+
                       <TextInput
                         style={styles.input}
                         placeholder="Commentaire"
@@ -318,13 +352,46 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
     marginTop: 10, // Add margin top to create space between the response row and the camera logo
   },
+  label: {
+    marginRight: 10,
+  },
+  switchContainer: {
+    width: 60,
+    height: 30,
+    borderRadius: 15,
+    justifyContent: 'center',
+    padding: 5,
+  },
+  switchButton: {
+    width: 60,
+    height: 30,
+    borderRadius: 15,
+    justifyContent: 'center',
+    padding: 5,
+  },
+  switchIndicator: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    backgroundColor: 'white',
+  },
   
   responseHeader: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 10,
   },
-  
+  deleteButton: {
+    backgroundColor: '#007bff',
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 5,
+    marginLeft: 10, // Adjust as needed for spacing
+  },
+  deleteButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
   radioButtonContainer: {
     flexDirection: 'row',
     alignItems: 'center',

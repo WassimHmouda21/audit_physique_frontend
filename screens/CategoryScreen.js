@@ -31,7 +31,7 @@ const CategoryScreen = ({ route }) => {
     async function fetchData() {
       try {
         // Fetch categories
-        const responseCategories = await axios.get('http://10.0.2.2:8000/api/categories');
+        const responseCategories = await axios.get(`http://10.0.2.2:8000/api/categorie/${siteId}`);
         if (responseCategories.status === 200) {
           const categs = responseCategories.data.categories.map(categ => new Categorie(categ.id, categ.Nom));
 

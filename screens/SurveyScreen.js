@@ -79,13 +79,13 @@ const SurveyScreen = ({ route }) => {
                 <Text style={styles.detailValue}>{customer.SN}</Text>
               </View>
             </View>
-            <CustomButton title="Join Survey Project" onPress={handletheMissingInspectionsPress} />
+            <CustomButton title="Join new Survey Project" onPress={handletheMissingInspectionsPress} />
           </View>
           <CustomButton
                 title={sortByYear ? 'Sort Ascending' : 'Sort Descending'}
                 onPress={handleSortByYear}
               />
-           <Text style={styles.infoText}>Associated projects :</Text>
+           <Text style={styles.infoText}>history of the projects :</Text>
       {sortedProjects.length > 0 ? (
         sortedProjects.map((project, index) => (
           <View key={index} style={styles.card}>

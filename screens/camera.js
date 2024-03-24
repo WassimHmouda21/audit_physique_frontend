@@ -70,6 +70,15 @@ const CameraApp = ({ route }) => {
     });
   };
   
+  // const handleCameraLaunch = () => {
+  //   console.log('Launching camera...');
+  //   const options = {
+  //     mediaType: 'photo',
+  //     includeBase64: false,
+  //     maxHeight: 2000,
+  //     maxWidth: 2000,
+  //   };
+
   const handleCameraLaunch = () => {
     console.log('Launching camera...');
     const options = {
@@ -77,6 +86,7 @@ const CameraApp = ({ route }) => {
       includeBase64: false,
       maxHeight: 2000,
       maxWidth: 2000,
+      cameraType: 'back', // Specify the back camera
     };
   
     launchCamera(options, response => {
@@ -93,6 +103,22 @@ const CameraApp = ({ route }) => {
       }
     });
   };
+  
+  
+  //   launchCamera(options, response => {
+  //     console.log('Camera response:', response);
+  //     if (response.didCancel) {
+  //       console.log('User cancelled camera');
+  //     } else if (response.error) {
+  //       console.log('Camera Error:', response.error);
+  //     } else {
+  //       let imageUri = response.uri || (response.assets?.[0]?.uri);
+  //       console.log('Captured image URI:', imageUri);
+  //       setSelectedImage(imageUri);
+  //       sendImageToBackend(imageUri); // Call function to send image to backend
+  //     }
+  //   });
+  // };
 
 //  const sendImageToBackend = async (imageUri) => {
 //     console.log('Sending image to backend...');
