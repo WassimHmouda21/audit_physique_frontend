@@ -229,7 +229,7 @@ const QuestionScreen = ({ route }) => {
   {typeof response.conformite}
 </Text> */}
 <Text style={styles.responseText}>
-  {response.conformite === 1 ? 'Conformite: checked' : 'Conformite: non checked'}
+  {response.conformite === 1 ? 'Conformite: checked' : 'Conformite:  unchecked'}
 </Text>
 
 
@@ -238,7 +238,7 @@ const QuestionScreen = ({ route }) => {
                         <View style={styles.responseContainer}>
                         <TouchableOpacity onPress={() => handlePress(response)}>
       <Image
-        source={require('../assets/images/neon-camera-icon.png')}
+        source={require('../assets/images/photo_icon.png')}
         style={styles.cameraLogo}
       />
     </TouchableOpacity>
@@ -257,7 +257,7 @@ const QuestionScreen = ({ route }) => {
                   <View style={styles.responseRow}>
                     <TouchableOpacity onPress={() => handlePress(null)}>
                       <Image
-                        source={require('../assets/images/neon-camera-icon.png')}
+                        source={require('../assets/images/photo_icon.png')}
                         style={styles.cameraLogo}
                       />
                     </TouchableOpacity>
