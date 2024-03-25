@@ -34,6 +34,7 @@ const QuestionScreen = ({ route }) => {
   const [categorieStructure, setCategorieStructure] = useState('');
   const [reponses, setReponses] = useState([]);
   const { categoryId, siteId } = route.params;
+  const [site, setSite] = useState(siteId);
   const navigation = useNavigation();
   const [selectedValue, setSelectedValue] = useState('on');
   const [showModal, setShowModal] = useState(false);
@@ -41,7 +42,6 @@ const QuestionScreen = ({ route }) => {
   const [projet, setProjet] = useState('');
   const [conformite, setConformite] = useState('2');
   const [commentaire, setCommentaire] = useState('');
-  const [site, setSite] = useState('');
   const [value, setValue] = useState(false); // Assuming value is a boolean state
 
   const toggleSwitch = () => {
@@ -96,6 +96,7 @@ const QuestionScreen = ({ route }) => {
 
   async function fetchReponses(questionId) {
     try {
+      console.log('Fetching responses for site ID:', siteId);
       console.log('Fetching responses for question ID:', questionId);
       const responseReponses = await axios.get(`http://10.0.2.2:8000/api/displayreponse/${questionId}`);
       if (responseReponses.status === 200 && responseReponses.data.reponses) {
@@ -290,12 +291,13 @@ const QuestionScreen = ({ route }) => {
                         value={commentaire}
                         onChangeText={text => setCommentaire(text)}
                       />
-                      <TextInput
-                        style={styles.input}
-                        placeholder="Site"
-                        value={site}
-                        onChangeText={text => setSite(text)}
-                      />
+                      {/* <TextInput
+      style={styles.input}
+      placeholder="Site"
+      value={site}
+      onChangeText={text => setSite(text)}
+      editable={false} // To prevent user input
+    /> */}
                       <Button title="Submit" onPress={() => handleSubmit(item.id)} />
                     </View>
                   </View>
