@@ -42,6 +42,7 @@ const QuestionScreen = ({ route }) => {
   const [projet, setProjet] = useState('');
   const [conformite, setConformite] = useState('2');
   const [commentaire, setCommentaire] = useState('');
+
   const [value, setValue] = useState(false); // Assuming value is a boolean state
 
   const toggleSwitch = () => {
@@ -141,8 +142,8 @@ const QuestionScreen = ({ route }) => {
 };
 
 
-  
-  
+
+
   const handlePress = (reponse) => {
     console.log("Handle Press function is called with response:", reponse);
     const reponseId = reponse ? reponse.id : null;
@@ -150,8 +151,8 @@ const QuestionScreen = ({ route }) => {
     // Navigating from the QuestionScreen component
     navigation.navigate('CameraScreen', { reponseId: reponseId });
   };
-  
-  
+
+
   const deleteReponseById = async (id) => {
     try {
       const response = await axios.delete(`http://10.0.2.2:8000/api/deletreponse/${id}`);
@@ -166,26 +167,36 @@ const QuestionScreen = ({ route }) => {
       console.log(error);
     }
   };
-  
-  
-  const updateReponse = async (item) => {
-    setSelectedReponse(item);
-    setConformite(item.conformite);
-    setCommentaire(item.commentaire);
-    setShowModal(true);
+
+
+  const updateReponse = async (itemId) => {
+    const updatedReponse = reponses.find(rep => rep.id === itemId);
+    if (updatedReponse) {
+      console.log('Selected response:', updatedReponse);
+      setSelectedReponse(updatedReponse);
+      setCommentaire(updatedReponse.commentaire);
+      setShowModal(true);
+    } else {
+      console.error('Response not found');
+    }
   };
   
+
   const handleUpdate = async () => {
     try {
       setShowModal(false);
       console.warn('Updating response:', conformite, commentaire);
       const url = `http://10.0.2.2:8000/api/updatereponse/${selectedReponse.id}`;
       const response = await axios.put(url, { conformite, commentaire });
+      console.log('Response from server:', response.data);
       if (response.status === 200) {
         console.warn('Response updated successfully');
         const updatedReponse = new Reponse(selectedReponse.id, selectedReponse.projet, selectedReponse.question_id, conformite, commentaire, selectedReponse.site);
+        console.log('Updated response:', updatedReponse);
         const updatedReponses = reponses.map(rep => rep.id === selectedReponse.id ? updatedReponse : rep);
+        console.log('Updated responses:', updatedReponses);
         setReponses(updatedReponses);
+        // setCommentaire(''); // Reset commentaire state
       } else {
         throw new Error('Failed to update response');
       }
@@ -193,6 +204,7 @@ const QuestionScreen = ({ route }) => {
       console.error('Error updating response:', error.message);
     }
   };
+
 
   return (
     <ScrollView style={styles.container}>
@@ -242,13 +254,41 @@ const QuestionScreen = ({ route }) => {
         style={styles.cameraLogo}
       />
     </TouchableOpacity>
-    <TouchableOpacity onPress={() => deleteReponseById(response.id)} style={styles.deleteButton}>
-                      <Text style={styles.deleteButtonText}>Delete response</Text>
-                    </TouchableOpacity>
+    <Modal visible={showModal} transparent={true}>
+  <View style={styles.centeredView}>
+    <View style={styles.modalView}>
+    <TextInput
+  style={styles.input}
+  placeholder="Enter Commentaire"
+  value={commentaire}
+  onChangeText={text => setCommentaire(text)}
+/>
+
+      <Button title="Update" onPress={handleUpdate} />
+      <Button title="Close" onPress={() => setShowModal(false)} />
+    </View>
+  </View>
+</Modal>
+
+      <View style={styles.containerr}>
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity onPress={() => updateReponse(response.id)} style={styles.deleteButton}>
+          <Text style={styles.deleteButtonText}>update constat</Text>
+        </TouchableOpacity>
+      </View>
+
+      <View style={{ marginVertical: 10 }}>
+        </View>
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity onPress={() => deleteReponseById(response.id)} style={styles.deleteButton}>
+          <Text style={styles.deleteButtonText}>Delete response</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
 
 
                         </View>
-                   
+
                     </View>
                   </View>
                 ))}
@@ -283,14 +323,15 @@ const QuestionScreen = ({ route }) => {
         </View>
       </TouchableOpacity>
       {/* <Text style={styles.conformiteValue}>{conformite}</Text> */}
-    
 
-                      <TextInput
-                        style={styles.input}
-                        placeholder="Commentaire"
-                        value={commentaire}
-                        onChangeText={text => setCommentaire(text)}
-                      />
+
+      <TextInput
+  style={styles.input}
+  placeholder="Enter Commentaire"
+  value={commentaire ? commentaire.toString() : ''}
+  onChangeText={(text) => setCommentaire(text)}
+/>
+
                       {/* <TextInput
       style={styles.input}
       placeholder="Site"
@@ -331,6 +372,7 @@ const QuestionScreen = ({ route }) => {
         </View>
       </Modal>
       <Button onPress={() => navigation.goBack()} title="Close" />
+
       <View style={styles.footer}>
         <CustomHeader />
       </View>
@@ -342,6 +384,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+  },
+   containerr: {
+    flexDirection: 'column', // Arrange children horizontally
+    justifyContent: 'space-between', // Distribute children along the main axis with equal space between them
+    alignItems: 'center', // Align children vertically
+    paddingHorizontal: 20,
+     // Add horizontal padding to the container
   },
   header: {
     padding: 20,
@@ -377,7 +426,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: 'white',
   },
-  
+
   responseHeader: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -419,7 +468,7 @@ const styles = StyleSheet.create({
     marginRight: 20, // Adjust as needed for spacing between options
   },
   radioButtonLabel: {
-    marginRight: 14, 
+    marginRight: 14,
     color: 'black',// Add margin between label and button
   },
   title: {
