@@ -13,83 +13,105 @@ class Customer_site {
   }
 }
 
+class Project {
+  constructor(id, Nom, URL, Description, customer_id , year , QualityChecked ,QualityCheckedDateTime ,QualityCheckedMessage ,Preuve) {
+    this.id = id;
+    this.Nom = Nom;
+    this.URL = URL;
+    this.Description = Description;
+    this.customer_id = customer_id;
+    this.year = year;
+    this.QualityChecked = QualityChecked;
+    this.QualityCheckedDateTime = QualityCheckedDateTime;
+    this.QualityCheckedMessage = QualityCheckedMessage;
+    this.Preuve = Preuve;
+  }
+}
 const SitesScreen = ({ route, navigation }) => {
-  const { customerId } = route.params; // Get customerId from route params
+  const { ProjetId, customerId } = route.params;
   const [customerSites, setCustomerSites] = useState([]);
   const [customer, setCustomer] = useState(null);
+  const [project, setProject] = useState(null);
 
   useEffect(() => {
-    async function fetchCustomerSites() {
+    async function fetchData() {
       try {
-        const response = await axios.get(`http://10.0.2.2:8000/api/customer_sites/${customerId}`);
-        console.log(response.data);
-        
-        if (response.data.status === 200) {
-          // Map the response data to instances of Customer_site class
-          const sites = response.data.customer_sites.map(site => new Customer_site(site.id, site.Numero_site, site.Structure, site.Lieu, site.Customer_Id));
+        const responseSites = await axios.get(`http://10.0.2.2:8000/api/project_sites/${ProjetId}`);
+        if (responseSites.data.status === 200) {
+          const sites = responseSites.data.customer_sites.map(site => new Customer_site(site.id, site.Numero_site, site.Structure, site.Lieu, site.Customer_Id));
           setCustomerSites(sites);
-         
         } else {
-          console.log(response.data.message); // Log error message if status is not 200
+          console.log(responseSites.data.message);
         }
 
         const responseCustomer = await axios.get(`http://10.0.2.2:8000/api/customer/${customerId}`);
-        console.log('Response data:', responseCustomer.data); // Log the response data
-        setCustomer(responseCustomer.data); // Set customer data from the response
+        setCustomer(responseCustomer.data);
 
+        console.log('Fetching project data for ProjetId:', ProjetId);
+        const responseProject = await axios.get(`http://10.0.2.2:8000/api/projet/${ProjetId}`);
+        console.log('Response data for ProjetId:', ProjetId, responseProject.data);
 
+        if (responseProject.data && responseProject.data.project) {
+          const projData = responseProject.data.project;
+          const proj = new Project(
+            projData.id,
+            projData.Nom,
+            projData.URL,
+            projData.Description,
+            projData.customer_id,
+            projData.year,
+            projData.QualityChecked,
+            projData.QualityCheckedDateTime,
+            projData.QualityCheckedMessage,
+            projData.Preuve
+          );
+          setProject(proj); // Set project data directly without using an array
+        } else {
+          console.log('Project data not found for ProjetId:', ProjetId);
+        }
       } catch (error) {
-        console.log(error);
+        console.log('Error fetching data:', error);
       }
     }
 
-    fetchCustomerSites();
-  }, [customerId]); // Include customerId in dependency array to re-fetch data when it changes
-
-
-  
-  
-
+    fetchData();
+  }, [customerId, ProjetId]);
 
   const handleCardPress = (customerSite) => {
-    // Log the customerSite object to inspect its structure and properties
     console.log("Customer Site:", customerSite);
-    
-    // Navigate to CategoryScreen and pass the site ID as a parameter
     console.log("Navigating to CategoryScreen with site ID:", customerSite.id);
-
     console.log("Customer ID:", customerId);
- 
-    navigation.navigate('CategoryScreen', { siteId: customerSite.id,customerId: customerId  });
+    navigation.navigate('CategoryScreen', { siteId: customerSite.id, customerId: customerId });
   };
-  
 
   return (
     <View style={styles.container}>
-    {customer && customer.Logo ? (
-      <View style={styles.logoContainer}>
-        <Image
-          source={{ uri: `http://10.0.2.2:8000/assets/${customer.Logo}` }}
-          style={styles.logo}
-          onLoadStart={() => console.log('Image loading started')}
-          onLoadEnd={() => console.log('Image loading ended')}
-          onError={(error) => console.log('Image loading error:', error)}
-        />
-      </View>
-    ) : (
-      <Text>No logo available</Text>
-    )}
+      {customer && customer.Logo ? (
+        <View style={styles.logoContainer}>
+          <Image
+            source={{ uri: `http://10.0.2.2:8000/assets/${customer.Logo}` }}
+            style={styles.logo}
+            onLoadStart={() => console.log('Image loading started')}
+            onLoadEnd={() => console.log('Image loading ended')}
+            onError={(error) => console.log('Image loading error:', error)}
+          />
+        </View>
+      ) : (
+        <Text>No logo available</Text>
+      )}
       <ScrollView style={styles.scrollView}>
         <View style={styles.card}>
-        <Text style={styles.infoText}>Select Customer Site:</Text>
-          {/* <View style={styles.cardContent}>
-            <Text style={styles.infoTextet}>Audit de Conformité ISO 27002 / Rapport d’Audit de Vérification des Aspects de Sécurité Physique</Text>
-            <Text style={styles.infoTexte}>Référence normative : ISO 27002 (Chapitre A.11)
-              Méthode : MEHARI 2017 (Sécurité des Sites et locaux informatiques)
-            </Text>
-          </View> */}
+          {project ? (
+            <View style={styles.cardContent}>
+              <Text>Project name: {project.Nom}</Text>
+              <Text>Year: {project.year}</Text>
+            </View>
+          ) : (
+            <Text>No project available</Text>
+          )}
+          <Text style={styles.infoText}>Select Customer Site:</Text>
         </View>
-       
+
         {customerSites.length > 0 ? (
           customerSites.map((site, index) => (
             <TouchableOpacity key={index} style={styles.card} onPress={() => handleCardPress(site)}>
@@ -97,7 +119,7 @@ const SitesScreen = ({ route, navigation }) => {
                 <View style={styles.labelValueContainer}>
                   <View style={styles.rectangle} />
                   <View style={styles.detailRow}>
-                    <Text style={[styles.detailLabel, { color: 'blue' }]}>site </Text>
+                    <Text style={[styles.detailLabel, { color: 'blue' }]}>Site </Text>
                     <Text style={[styles.detailValue]}>{site.Numero_site}</Text>
                   </View>
                 </View>
@@ -109,10 +131,6 @@ const SitesScreen = ({ route, navigation }) => {
                   <Text style={[styles.detailLabel, { color: 'blue' }]}>Lieu:</Text>
                   <Text style={[styles.detailValue]}>{site.Lieu}</Text>
                 </View>
-                {/* <View style={styles.detailRow}>
-                  <Text style={[styles.detailLabel, { color: 'blue' }]}>Customer_Id:</Text>
-                  <Text style={[styles.detailValue]}>{site.Customer_Id}</Text>
-                </View> */}
               </View>
             </TouchableOpacity>
           ))
@@ -127,6 +145,8 @@ const SitesScreen = ({ route, navigation }) => {
     </View>
   );
 };
+
+
 
 const styles = StyleSheet.create({
   container: {

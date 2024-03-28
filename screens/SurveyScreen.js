@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, StatusBar ,ScrollView} from 'react-native';
+import { View, Text, StyleSheet, Image, StatusBar ,TouchableOpacity,ScrollView} from 'react-native';
 import axios from 'axios';
 import CustomButton from '../components/CustomButton';
 import { useNavigation } from '@react-navigation/native';
@@ -33,7 +33,14 @@ const SurveyScreen = ({ route }) => {
     fetchCustomer();
   }, [customerId]);
   
-
+  const handleProjectPress = (projectId) => {
+    console.log("customerId ***:", customer.id);
+    console.log("ProjetId ***:", projectId); // Use projectId instead of project.id
+    navigation.navigate('SitesScreen', { ProjetId: projectId, customerId: customer.id });
+  };
+  
+  
+  
   const handletheMissingInspectionsPress = () => {
     console.log('Button pressed');
     // Implement navigation logic
@@ -86,26 +93,29 @@ const SurveyScreen = ({ route }) => {
                 onPress={handleSortByYear}
               />
            <Text style={styles.infoText}>history of the projects :</Text>
-      {sortedProjects.length > 0 ? (
-        sortedProjects.map((project, index) => (
-          <View key={index} style={styles.card}>
-            <View style={styles.detailsContainer}>
-              <View style={styles.detailRow}>
-                <View style={styles.detailItem}>
-                  <Text style={styles.detailLabel}>Project Name:</Text>
-                  <Text style={styles.detailValue}>{project.Nom}</Text>
-                </View>
-                <View style={styles.detailItem}>
-                  <Text style={styles.detailLabel}>Project Year:</Text>
-                  <Text style={styles.detailValue}>{project.year}</Text>
-                </View>
-              </View>
+           {sortedProjects.length > 0 ? (
+  sortedProjects.map((project, index) => (
+    <TouchableOpacity key={index} onPress={() => handleProjectPress(project.id)}>
+      <View style={styles.card}>
+        <View style={styles.detailsContainer}>
+          <View style={styles.detailRow}>
+            <View style={styles.detailItem}>
+              <Text style={styles.detailLabel}>Project Name:</Text>
+              <Text style={styles.detailValue}>{project.Nom}</Text>
+            </View>
+            <View style={styles.detailItem}>
+              <Text style={styles.detailLabel}>Project Year:</Text>
+              <Text style={styles.detailValue}>{project.year}</Text>
             </View>
           </View>
-        ))
-      ) : (
-        <Text>No projects available</Text>
-      )}
+        </View>
+      </View>
+    </TouchableOpacity>
+  ))
+) : (
+  <Text>No projects available</Text>
+)}
+
         </View>
         </ScrollView>
       )}
