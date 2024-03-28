@@ -191,7 +191,8 @@ const QuestionScreen = ({ route }) => {
       console.log('Response from server:', response.data);
       if (response.status === 200) {
         console.warn('Response updated successfully');
-        const updatedReponse = new Reponse(selectedReponse.id, selectedReponse.projet, selectedReponse.question_id, conformite, commentaire, selectedReponse.site);
+        // Retain the current value of conformite
+        const updatedReponse = new Reponse(selectedReponse.id, selectedReponse.projet, selectedReponse.question_id, selectedReponse.conformite, commentaire, selectedReponse.site);
         console.log('Updated response:', updatedReponse);
         const updatedReponses = reponses.map(rep => rep.id === selectedReponse.id ? updatedReponse : rep);
         console.log('Updated responses:', updatedReponses);
@@ -204,6 +205,8 @@ const QuestionScreen = ({ route }) => {
       console.error('Error updating response:', error.message);
     }
   };
+  
+  
 
 
   return (
