@@ -18,9 +18,9 @@ class Question {
 }
 
 class Reponse {
-  constructor(id, projet, question_id, conformite, commentaire, site) {
+  constructor(id, projet_id, question_id, conformite, commentaire, site) {
     this.id = id;
-    this.projet = projet;
+    this.projet_id = projet_id;
     this.question_id = question_id;
     this.conformite = conformite;
     this.commentaire = commentaire;
@@ -39,7 +39,7 @@ const QuestionScreen = ({ route }) => {
   const [selectedValue, setSelectedValue] = useState('on');
   const [showModal, setShowModal] = useState(false);
   const [selectedReponse, setSelectedReponse] = useState(null);
-  const [projet, setProjet] = useState('');
+  const [projet_id, setProjet_id] = useState('');
   const [conformite, setConformite] = useState('2');
   const [commentaire, setCommentaire] = useState('');
 
@@ -102,7 +102,7 @@ const QuestionScreen = ({ route }) => {
       const responseReponses = await axios.get(`http://10.0.2.2:8000/api/displayreponse/${questionId}`);
       if (responseReponses.status === 200 && responseReponses.data.reponses) {
         console.log('Responses:', responseReponses.data.reponses);
-        const reps = responseReponses.data.reponses.map(rep => new Reponse(rep.id, rep.projet, rep.question_id, rep.conformite, rep.commentaire, rep.site));
+        const reps = responseReponses.data.reponses.map(rep => new Reponse(rep.id, rep.projet_id, rep.question_id, rep.conformite, rep.commentaire, rep.site));
         console.log('Mapped responses:', reps);
         setReponses(prevReponses => [...prevReponses, ...reps]);
       } else {
@@ -116,7 +116,7 @@ const QuestionScreen = ({ route }) => {
   const handleSubmit = async (questionId) => {
     try {
         const response = await axios.post(`http://10.0.2.2:8000/api/reponses/${questionId}`, {
-            projet,
+          projet_id,
             conformite,
             commentaire,
             site
@@ -192,7 +192,7 @@ const QuestionScreen = ({ route }) => {
       if (response.status === 200) {
         console.warn('Response updated successfully');
         // Retain the current value of conformite
-        const updatedReponse = new Reponse(selectedReponse.id, selectedReponse.projet, selectedReponse.question_id, selectedReponse.conformite, commentaire, selectedReponse.site);
+        const updatedReponse = new Reponse(selectedReponse.id, selectedReponse.projet_id, selectedReponse.question_id, selectedReponse.conformite, commentaire, selectedReponse.site);
         console.log('Updated response:', updatedReponse);
         const updatedReponses = reponses.map(rep => rep.id === selectedReponse.id ? updatedReponse : rep);
         console.log('Updated responses:', updatedReponses);
@@ -234,7 +234,7 @@ const QuestionScreen = ({ route }) => {
                 .map((response, index) => (
                   <View key={index} style={styles.responseContainer}>
                     <View style={styles.responseRow}>
-                      <Text style={styles.responseText}>Projet: {response.projet}</Text>
+                      <Text style={styles.responseText}>Projet: {response.projet_id}</Text>
                       {/* <Text style={styles.responseText}>Question ID: {response.question_id}</Text> */}
                       {/* <Text style={styles.responseText}>Conformite: {response.conformite}</Text> */}
 {/* <Text style={styles.responseText}>
@@ -308,8 +308,8 @@ const QuestionScreen = ({ route }) => {
                       <TextInput
                         style={styles.input}
                         placeholder="Projet"
-                        value={projet}
-                        onChangeText={text => setProjet(text)}
+                        value={projet_id}
+                        onChangeText={text => setProjet_id(text)}
                       />
                       {/* <TextInput
                         style={styles.input}

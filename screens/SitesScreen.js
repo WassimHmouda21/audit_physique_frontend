@@ -103,8 +103,8 @@ const SitesScreen = ({ route, navigation }) => {
         <View style={styles.card}>
           {project ? (
             <View style={styles.cardContent}>
-              <Text>Project name: {project.Nom}</Text>
-              <Text>Year: {project.year}</Text>
+              <Text style={styles.detailValue}> {project.Nom}</Text>
+              <Text style={styles.detailValue}> Year: {project.year}</Text>
             </View>
           ) : (
             <Text>No project available</Text>

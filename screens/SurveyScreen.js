@@ -92,7 +92,7 @@ const SurveyScreen = ({ route }) => {
                 title={sortByYear ? 'Sort Ascending' : 'Sort Descending'}
                 onPress={handleSortByYear}
               />
-           <Text style={styles.infoText}>history of the projects :</Text>
+           <Text style={styles.infoText}>select project :</Text>
            {sortedProjects.length > 0 ? (
   sortedProjects.map((project, index) => (
     <TouchableOpacity key={index} onPress={() => handleProjectPress(project.id)}>
