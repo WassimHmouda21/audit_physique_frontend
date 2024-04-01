@@ -88,17 +88,30 @@ const SitesScreen = ({ route, navigation }) => {
     navigation.navigate('CategoryScreen', { siteId: customerSite.id, customerId: customerId , ProjetId: ProjetId});
   };
 
+  // const submitProject = async (projectId) => {
+  //   try {
+  //     await axios.post(`http://10.0.2.2:8000/api/updateproj/${projectId}`, { is_submitted: true });
+  //     console.log('Project submitted successfully.');
+  //     // Refresh project data after submission
+  //     fetchData();
+  //   } catch (error) {
+  //     console.log('Error submitting project:', error);
+  //   }
+  // };
+
   const submitProject = async (projectId) => {
     try {
       await axios.post(`http://10.0.2.2:8000/api/updateproj/${projectId}`, { is_submitted: true });
       console.log('Project submitted successfully.');
       // Refresh project data after submission
       fetchData();
+      // Navigate to ProgressionScreen with project data
+      // navigation.navigate('ProgressionScreen', { project: project });
     } catch (error) {
       console.log('Error submitting project:', error);
     }
   };
-
+  
   return (
     <View style={styles.container}>
       {customer && customer.Logo ? (
