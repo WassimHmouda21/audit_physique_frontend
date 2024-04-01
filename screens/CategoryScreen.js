@@ -7,7 +7,7 @@ import { useNavigation } from '@react-navigation/native';
 const CategoryScreen = ({ route }) => {
   const [categories, setCategories] = useState([]);
   const [customerSiteStructure, setCustomerSiteStructure] = useState('');
-  const { siteId,customerId  } = route.params;
+  const { siteId,customerId ,ProjetId } = route.params;
   const [customer, setCustomer] = useState(null);
   const navigation = useNavigation();
 
@@ -24,7 +24,8 @@ const CategoryScreen = ({ route }) => {
     // Navigate to CategoryScreen and pass the site ID as a parameter
     console.log("Navigating to QuestionScreen with category ID:", categorie.id);
     console.log("Site ID:", siteId);
-    navigation.navigate('QuestionScreen', { categoryId: categorie.id, siteId: siteId });
+    console.log("Project ID:", ProjetId);
+    navigation.navigate('QuestionScreen', { categoryId: categorie.id, siteId: siteId ,ProjetId: ProjetId });
   };
 
   useEffect(() => {

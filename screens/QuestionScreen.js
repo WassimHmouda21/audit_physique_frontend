@@ -33,13 +33,13 @@ const QuestionScreen = ({ route }) => {
   const [customerSiteStructure, setCustomerSiteStructure] = useState('');
   const [categorieStructure, setCategorieStructure] = useState('');
   const [reponses, setReponses] = useState([]);
-  const { categoryId, siteId } = route.params;
+  const { categoryId, siteId ,ProjetId } = route.params;
   const [site, setSite] = useState(siteId);
   const navigation = useNavigation();
   const [selectedValue, setSelectedValue] = useState('on');
   const [showModal, setShowModal] = useState(false);
   const [selectedReponse, setSelectedReponse] = useState(null);
-  const [projet_id, setProjet_id] = useState('');
+  const [projet_id, setProjet_id] = useState(ProjetId);
   const [conformite, setConformite] = useState('2');
   const [commentaire, setCommentaire] = useState('');
 
@@ -305,12 +305,12 @@ const QuestionScreen = ({ route }) => {
                       />
                     </TouchableOpacity>
                     <View style={styles.textInputContainer}>
-                      <TextInput
+                      {/* <TextInput
                         style={styles.input}
                         placeholder="Projet"
                         value={projet_id}
                         onChangeText={text => setProjet_id(text)}
-                      />
+                      /> */}
                       {/* <TextInput
                         style={styles.input}
                         placeholder="Conformite"

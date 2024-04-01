@@ -14,7 +14,7 @@ class Customer_site {
 }
 
 class Project {
-  constructor(id, Nom, URL, Description, customer_id , year , QualityChecked ,QualityCheckedDateTime ,QualityCheckedMessage ,Preuve) {
+  constructor(id, Nom, URL, Description, customer_id , year , QualityChecked ,QualityCheckedDateTime ,QualityCheckedMessage ,Preuve ,is_submitted) {
     this.id = id;
     this.Nom = Nom;
     this.URL = URL;
@@ -25,8 +25,10 @@ class Project {
     this.QualityCheckedDateTime = QualityCheckedDateTime;
     this.QualityCheckedMessage = QualityCheckedMessage;
     this.Preuve = Preuve;
+    this.is_submitted = is_submitted;
   }
 }
+
 const SitesScreen = ({ route, navigation }) => {
   const { ProjetId, customerId } = route.params;
   const [customerSites, setCustomerSites] = useState([]);
@@ -63,7 +65,8 @@ const SitesScreen = ({ route, navigation }) => {
             projData.QualityChecked,
             projData.QualityCheckedDateTime,
             projData.QualityCheckedMessage,
-            projData.Preuve
+            projData.Preuve,
+            projData.is_submitted
           );
           setProject(proj); // Set project data directly without using an array
         } else {
@@ -81,7 +84,19 @@ const SitesScreen = ({ route, navigation }) => {
     console.log("Customer Site:", customerSite);
     console.log("Navigating to CategoryScreen with site ID:", customerSite.id);
     console.log("Customer ID:", customerId);
-    navigation.navigate('CategoryScreen', { siteId: customerSite.id, customerId: customerId });
+    console.log("Project ID:", ProjetId);
+    navigation.navigate('CategoryScreen', { siteId: customerSite.id, customerId: customerId , ProjetId: ProjetId});
+  };
+
+  const submitProject = async (projectId) => {
+    try {
+      await axios.post(`http://10.0.2.2:8000/api/updateproj/${projectId}`, { is_submitted: true });
+      console.log('Project submitted successfully.');
+      // Refresh project data after submission
+      fetchData();
+    } catch (error) {
+      console.log('Error submitting project:', error);
+    }
   };
 
   return (
@@ -137,7 +152,13 @@ const SitesScreen = ({ route, navigation }) => {
         ) : (
           <Text>No customer sites available</Text>
         )}
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity onPress={() => submitProject(project.id)} style={styles.deleteButton}>
+            <Text style={styles.deleteButtonText}>Submit Project</Text>
+          </TouchableOpacity>
+        </View>
       </ScrollView>
+      
       <StatusBar style="auto" />
       <View style={styles.footer}>
         <CustomHeader />
@@ -145,6 +166,8 @@ const SitesScreen = ({ route, navigation }) => {
     </View>
   );
 };
+
+
 
 
 
@@ -169,6 +192,17 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     textAlign: 'center',
     color: 'blue',
+  },
+  deleteButton: {
+    backgroundColor: '#007bff',
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 5,
+    marginLeft: 10, // Adjust as needed for spacing
+  },
+  deleteButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
   },
   infoTextet: {
     fontSize: 19,
