@@ -2,13 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import CustomHeader from '../components/CustomHeader';
 import axios from 'axios';
-
+import { useNavigation, useFocusEffect } from '@react-navigation/native'; // Import useFocusEffect
 const ProgressionScreen = () => {
   const [projects, setProjects] = useState([]);
   const [project, setProject] = useState([]);
 
-  useEffect(() => {
-    async function fetchData() {
+  const navigation = useNavigation();
+
+  // Use useFocusEffect instead of useEffect
+  useFocusEffect(
+    React.useCallback(() => {
+      async function fetchData() {
       try {
         console.log('Fetching projects...');
         const response = await axios.get(`http://10.0.2.2:8000/api/getprojsubmit`);
@@ -36,8 +40,10 @@ const ProgressionScreen = () => {
       }
     }
 
-    fetchData();
-  }, []);
+    fetchData(); 
+    return () => {};
+  }, []) // Empty dependency array to run only on mount
+);
 
   console.log('Projects state:', projects);
 
