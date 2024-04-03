@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, StatusBar, Image ,ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, StatusBar, Image, ScrollView } from 'react-native';
 import CustomHeader from '../components/CustomHeader';
 import axios from 'axios';
 
@@ -14,7 +14,7 @@ class Customer_site {
 }
 
 class Project {
-  constructor(id, Nom, URL, Description, customer_id , year , QualityChecked ,QualityCheckedDateTime ,QualityCheckedMessage ,Preuve ,is_submitted) {
+  constructor(id, Nom, URL, Description, customer_id, year, QualityChecked, QualityCheckedDateTime, QualityCheckedMessage, Preuve, is_submitted) {
     this.id = id;
     this.Nom = Nom;
     this.URL = URL;
@@ -35,49 +35,50 @@ const SitesScreen = ({ route, navigation }) => {
   const [customer, setCustomer] = useState(null);
   const [project, setProject] = useState(null);
 
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const responseSites = await axios.get(`http://10.0.2.2:8000/api/project_sites/${ProjetId}`);
-        if (responseSites.data.status === 200) {
-          const sites = responseSites.data.customer_sites.map(site => new Customer_site(site.id, site.Numero_site, site.Structure, site.Lieu, site.Customer_Id));
-          setCustomerSites(sites);
-        } else {
-          console.log(responseSites.data.message);
-        }
-
-        const responseCustomer = await axios.get(`http://10.0.2.2:8000/api/customer/${customerId}`);
-        setCustomer(responseCustomer.data);
-
-        console.log('Fetching project data for ProjetId:', ProjetId);
-        const responseProject = await axios.get(`http://10.0.2.2:8000/api/projet/${ProjetId}`);
-        console.log('Response data for ProjetId:', ProjetId, responseProject.data);
-
-        if (responseProject.data && responseProject.data.project) {
-          const projData = responseProject.data.project;
-          const proj = new Project(
-            projData.id,
-            projData.Nom,
-            projData.URL,
-            projData.Description,
-            projData.customer_id,
-            projData.year,
-            projData.QualityChecked,
-            projData.QualityCheckedDateTime,
-            projData.QualityCheckedMessage,
-            projData.Preuve,
-            projData.is_submitted
-          );
-          setProject(proj); // Set project data directly without using an array
-        } else {
-          console.log('Project data not found for ProjetId:', ProjetId);
-        }
-      } catch (error) {
-        console.log('Error fetching data:', error);
+  // Define the fetchData function outside of useEffect
+  const fetchData = async () => {
+    try {
+      const responseSites = await axios.get(`http://10.0.2.2:8000/api/project_sites/${ProjetId}`);
+      if (responseSites.data.status === 200) {
+        const sites = responseSites.data.customer_sites.map(site => new Customer_site(site.id, site.Numero_site, site.Structure, site.Lieu, site.Customer_Id));
+        setCustomerSites(sites);
+      } else {
+        console.log(responseSites.data.message);
       }
-    }
 
-    fetchData();
+      const responseCustomer = await axios.get(`http://10.0.2.2:8000/api/customer/${customerId}`);
+      setCustomer(responseCustomer.data);
+
+      console.log('Fetching project data for ProjetId:', ProjetId);
+      const responseProject = await axios.get(`http://10.0.2.2:8000/api/projet/${ProjetId}`);
+      console.log('Response data for ProjetId:', ProjetId, responseProject.data);
+
+      if (responseProject.data && responseProject.data.project) {
+        const projData = responseProject.data.project;
+        const proj = new Project(
+          projData.id,
+          projData.Nom,
+          projData.URL,
+          projData.Description,
+          projData.customer_id,
+          projData.year,
+          projData.QualityChecked,
+          projData.QualityCheckedDateTime,
+          projData.QualityCheckedMessage,
+          projData.Preuve,
+          projData.is_submitted
+        );
+        setProject(proj); // Set project data directly without using an array
+      } else {
+        console.log('Project data not found for ProjetId:', ProjetId);
+      }
+    } catch (error) {
+      console.log('Error fetching data:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData(); // Call fetchData function on component mount
   }, [customerId, ProjetId]);
 
   const handleCardPress = (customerSite) => {
@@ -85,19 +86,8 @@ const SitesScreen = ({ route, navigation }) => {
     console.log("Navigating to CategoryScreen with site ID:", customerSite.id);
     console.log("Customer ID:", customerId);
     console.log("Project ID:", ProjetId);
-    navigation.navigate('CategoryScreen', { siteId: customerSite.id, customerId: customerId , ProjetId: ProjetId});
+    navigation.navigate('CategoryScreen', { siteId: customerSite.id, customerId: customerId, ProjetId: ProjetId });
   };
-
-  // const submitProject = async (projectId) => {
-  //   try {
-  //     await axios.post(`http://10.0.2.2:8000/api/updateproj/${projectId}`, { is_submitted: true });
-  //     console.log('Project submitted successfully.');
-  //     // Refresh project data after submission
-  //     fetchData();
-  //   } catch (error) {
-  //     console.log('Error submitting project:', error);
-  //   }
-  // };
 
   const submitProject = async (projectId) => {
     try {

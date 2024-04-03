@@ -5,6 +5,7 @@ import axios from 'axios';
 
 const ProgressionScreen = () => {
   const [projects, setProjects] = useState([]);
+  const [project, setProject] = useState([]);
 
   useEffect(() => {
     async function fetchData() {
@@ -16,6 +17,17 @@ const ProgressionScreen = () => {
         if (response.data && response.data.projects) {
           console.log('Projects found:', response.data.projects);
           setProjects(response.data.projects);
+        } else {
+          console.log('No projects found in response.');
+        }
+
+
+        const unsubmitresponse = await axios.get(`http://10.0.2.2:8000/api/getprojunsubmit`);
+        console.log('Response data:', unsubmitresponse.data);
+
+        if (unsubmitresponse.data && unsubmitresponse.data.projects) {
+          console.log('Projects found:', unsubmitresponse.data.projects);
+          setProject(unsubmitresponse.data.projects);
         } else {
           console.log('No projects found in response.');
         }
@@ -31,33 +43,51 @@ const ProgressionScreen = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.cardContent}>
-        <Text style={styles.detailLabel}>Progression Screen</Text>
-        <Text style={styles.detailLabel}>these are done projects</Text>
-        {projects.length > 0 ? (
-          projects.map(project => (
-            <View key={project.id}>
-              <View style={styles.detailRow}>
-                <Text style={styles.detailValue}>Project Name:</Text>
-                <Text style={styles.detailValue}>{project.Nom}</Text>
+      <View style={styles.cardsContainer}>
+        <View style={styles.cardContent}>
+          <Text style={styles.detailLabell}>Progression History</Text>
+          <Text style={styles.detailLabel}>These are done projects</Text>
+          {projects.length > 0 ? (
+            projects.map((project) => (
+              <View key={project.id}>
+                <View style={styles.detailRow}>
+                  <Text style={styles.detailValue}>Project Name:</Text>
+                  <Text style={styles.detailValue}>{project.Nom}</Text>
+                </View>
+                <View style={styles.detailRow}>
+                  <Text style={styles.detailValue}>Year:</Text>
+                  <Text style={styles.detailValue}>{project.year}</Text>
+                </View>
               </View>
-              <View style={styles.detailRow}>
-                <Text style={styles.detailValue}>Year:</Text>
-                <Text style={styles.detailValue}>{project.year}</Text>
+            ))
+          ) : (
+            <Text>No projects available</Text>
+          )}
+           <Text style={styles.detailLabel}>These are undone projects</Text>
+          {project.length > 0 ? (
+            project.map((project) => (
+              <View key={project.id}>
+                <View style={styles.detailRow}>
+                  <Text style={styles.detailValue}>Project Name:</Text>
+                  <Text style={styles.detailValue}>{project.Nom}</Text>
+                </View>
+                <View style={styles.detailRow}>
+                  <Text style={styles.detailValue}>Year:</Text>
+                  <Text style={styles.detailValue}>{project.year}</Text>
+                </View>
               </View>
-            </View>
-          ))
-        ) : (
-          <Text>No projects available</Text>
-        )}
+            ))
+          ) : (
+            <Text>No projects available</Text>
+          )}
+        </View>
       </View>
       <View style={styles.footer}>
         <CustomHeader />
       </View>
     </View>
   );
-};
-
+          };  
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -72,6 +102,7 @@ const styles = StyleSheet.create({
   },
   cardContent: {
     flex: 1,
+    margin: 10, 
   },
   detailRow: {
     flexDirection: 'row',
@@ -88,6 +119,13 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: 'blue',
     marginBottom: 10,
+  },
+  detailLabell: {
+    fontSize: 19,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    color: '#DAA520',
+    marginLeft: 30
   },
 });
 

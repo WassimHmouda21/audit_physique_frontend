@@ -3,23 +3,68 @@ import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import CustomHeader from '../components/CustomHeader'; // Update the path
 import CustomButton from '../components/CustomButton';
 import { useNavigation } from '@react-navigation/native';
-
+import axios from 'axios';
 
 const HomeScreen = () => {
   const [date, setDate] = useState(new Date());
-  const [totalSurveys, setTotalSurveys] = useState(17);
-  const [undoneSites, setUndoneSites] = useState(145);
-  const [doneSites, setDoneSites] = useState(50);
+  // const [totalSurveys, setTotalSurveys] = useState(17);
+  // const [undoneSites, setUndoneSites] = useState(145);
+  // const [doneSites, setDoneSites] = useState(50);
   const [undoneProjects, setUndoneProjects] = useState(13);
   const [doneProjects, setDoneProjects] = useState(4);
-  const data = [
-    { label: 'Total Projects:', value: `${totalSurveys} projects` },
-    { label: 'Undone Sites:', value: `${undoneSites} sites` },
-    { label: 'Undone Projects:', value: `${undoneProjects} projects` },
-    { label: 'Done Sites:', value: `${doneSites} sites` },
-    { label: 'Done Projects:', value: `${doneProjects} projects` },
-  ];  // Example value
+  // const data = [
+  //   { label: 'Total Projects:', value: `${totalSurveys} projects` },
+  //   // { label: 'Undone Sites:', value: `${undoneSites} sites` },
+  //   // { label: 'Undone Projects:', value: `${undoneProjects} projects` },
+  //   // { label: 'Done Sites:', value: `${doneSites} sites` },
+  //   // { label: 'Done Projects:', value: `${doneProjects} projects` },
+  // ];  // Example value
   const navigation = useNavigation();
+  const [projects, setProjects] = useState([]);
+  const [project, setProject] = useState([]);
+  const [totalProjects, setTotalSurveys] = useState([]);
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        console.log('Fetching projects...');
+        const response = await axios.get(`http://10.0.2.2:8000/api/getprojsubmit`);
+        console.log('Response data:', response.data);
+  
+        if (response.data && response.data.projects) {
+          console.log('Projects found:', response.data.projects);
+          // Set the length of the response data to setDoneProjects
+          setDoneProjects(response.data.projects.length);
+        } else {
+          console.log('No projects found in response.');
+        }
+  
+  
+        const unsubmitresponse = await axios.get(`http://10.0.2.2:8000/api/getprojunsubmit`);
+        console.log('Response data:', unsubmitresponse.data);
+  
+        if (unsubmitresponse.data && unsubmitresponse.data.projects) {
+          console.log('Projects found:', unsubmitresponse.data.projects);
+          // Set the length of the unsubmit response data to setUndoneProjects
+          setUndoneProjects(unsubmitresponse.data.projects.length);
+        } else {
+          console.log('No projects found in response.');
+        }
+        const totalProjects = doneProjects + undoneProjects;
+
+// Update the state variable setTotalSurveys with the total number of projects
+        setTotalSurveys(totalProjects);
+      } catch (error) {
+        console.error('Error fetching projects:', error);
+      }
+    }
+  
+    fetchData();
+  }, [doneProjects, undoneProjects]);
+  // Calculate the total number of projects
+
+
+  console.log('Projects state:', projects);
+
   const handleMissingInspectionsPress = () => {
     navigation.navigate('SearchCustomerScreen');// Implement logic for handling Missing Inspections button press
   };
@@ -38,19 +83,26 @@ const HomeScreen = () => {
       <Text style={styles.dateText}>{date.toDateString()}</Text>
     </View>
   </View>
+
+  
   <View style={styles.textContainer}>
-    {data.map((item, index) => (
+  <Text style={[styles.infoText, styles.valueStyle]}>Total Projects:{totalProjects} projects</Text>
+  <Text style={[styles.infoText, styles.valueStyle]}>Done Projects: {doneProjects} projects</Text>
+<Text style={[styles.infoText, styles.valueStyle]}>Undone Projects: {undoneProjects} projects</Text>
+    {/* {data.map((item, index) => (
       <View key={index} style={{ flexDirection: 'row' }}>
         <Text style={[styles.infoText, styles.labelStyle]}>{item.label}</Text>
         <Text style={[styles.infoText, styles.valueStyle]}>{item.value}</Text>
+        
       </View>
-    ))}
+    ))} */}
   </View>
  
 </View>
 
 
       </View>
+
       <View style={[styles.bottomContent, { marginTop: 0, justifyContent: 'center' }]}>
     <CustomButton title="audit physique en cours" onPress={handleMissingInspectionsPress} />
   </View>
@@ -120,7 +172,8 @@ const styles = StyleSheet.create({
     color: 'blue', // Example color for label
   },
   valueStyle: {
-    color: 'black', // Example color for value
+    color: 'black',
+    fontSize: 20, // Example color for value
   },
 
   // button: {
