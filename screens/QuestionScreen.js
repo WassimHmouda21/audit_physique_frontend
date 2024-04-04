@@ -42,7 +42,7 @@ const QuestionScreen = ({ route }) => {
   const [projet_id, setProjet_id] = useState(ProjetId);
   const [conformite, setConformite] = useState('2');
   const [commentaire, setCommentaire] = useState('');
-
+  const [error, setError] = useState('');
   const [value, setValue] = useState(false); // Assuming value is a boolean state
 
   const toggleSwitch = () => {
@@ -181,7 +181,14 @@ const QuestionScreen = ({ route }) => {
     }
   };
   
-
+  const handleInputChange = (text) => {
+    setCommentaire(text);
+    if (text.trim() === '') {
+      setError('This field cannot be empty');
+    } else {
+      setError('');
+    }
+  };
   const handleUpdate = async () => {
     try {
       setShowModal(false);
@@ -298,6 +305,7 @@ const QuestionScreen = ({ route }) => {
               {reponses.every(response => response.question_id !== item.id) && (
                 <View style={styles.responseContainer}>
                   <View style={styles.responseRow}>
+                  <Text style={styles.label}>Vérification</Text>
                     <TouchableOpacity onPress={() => handlePress(null)}>
                       <Image
                         source={require('../assets/images/photo_icon.png')}
@@ -327,13 +335,19 @@ const QuestionScreen = ({ route }) => {
       </TouchableOpacity>
       {/* <Text style={styles.conformiteValue}>{conformite}</Text> */}
 
-
       <TextInput
+        style={styles.input}
+        placeholder="Enter Commentaire"
+        value={commentaire}
+        onChangeText={handleInputChange}
+      />
+      {error ? <Text style={styles.errorText}>{error}</Text> : null}
+      {/* <TextInput
   style={styles.input}
   placeholder="Enter Commentaire"
   value={commentaire ? commentaire.toString() : ''}
   onChangeText={(text) => setCommentaire(text)}
-/>
+/> */}
 
                       {/* <TextInput
       style={styles.input}
@@ -408,6 +422,8 @@ const styles = StyleSheet.create({
   },
   label: {
     marginRight: 10,
+    fontSize: 18,
+     color: 'black',
   },
   switchContainer: {
     width: 60,
@@ -541,6 +557,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 5,
+  },
+  errorText: {
+    color: 'red',
   },
   responseText: {
     marginBottom: 5,
