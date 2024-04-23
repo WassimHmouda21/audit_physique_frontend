@@ -12,12 +12,14 @@ import QuestionScreen from './screens/QuestionScreen';
 import ReponseScreen from './screens/ReponseScreen';
 import SearchCustomerScreen from './screens/SearchCustomerScreen';
 import CameraApp from './screens/camera';
+import RegistrationScreen from './screens/RegistrationScreen';
 const Stack = createStackNavigator();
 
 const Navigation = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator>
+        <Stack.Screen name="RegistrationScreen" component={RegistrationScreen} />
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="Survey" component={SurveyScreen} />
         <Stack.Screen name="Album" component={AlbumScreen} />
