@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, TextInput, Button, Alert, StyleSheet } from 'react-native';
 import axios from 'axios';
-
+import { useNavigation, useFocusEffect } from '@react-navigation/native'; 
 const RegistrationScreen = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -10,7 +10,7 @@ const RegistrationScreen = () => {
   const [address, setAddress] = useState('');
   const [role, setRole] = useState(''); // Added role state
   const [isEmailVerified, setIsEmailVerified] = useState('');
-
+  const navigation = useNavigation();
   useEffect(() => {
     console.log('Registration screen mounted');
     // You can add any initialization logic here
@@ -46,6 +46,7 @@ const RegistrationScreen = () => {
       if (response.status === 201) {
         const message = response.data.message;
         Alert.alert('Success', message);
+        navigation.navigate('SearchCustomerScreen');
       } else {
         console.log('Failed to create user:', response.data);
         Alert.alert('Error', 'Failed to create response');
