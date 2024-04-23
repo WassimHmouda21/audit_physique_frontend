@@ -55,7 +55,10 @@ const ProgressionScreen = () => {
       .then(response => {
         // Handle successful response if needed
         console.log('Reclamation email sent successfully:', response.data);
+<<<<<<< HEAD
         console.warn('Reclamation email sent successfully');
+=======
+>>>>>>> f99a66a0c717283081e3ac4a22868424368fa946
       })
       .catch(error => {
         if (error.response) {
@@ -116,7 +119,11 @@ const ProgressionScreen = () => {
             <Text>No projects available</Text>
           )}
                  <TouchableOpacity onPress={handleReclamationButtonPress} style={styles.button}>
+<<<<<<< HEAD
             <Text style={styles.buttonText}>Send email Reclamation</Text>
+=======
+            <Text style={styles.buttonText}>Send Reclamation</Text>
+>>>>>>> f99a66a0c717283081e3ac4a22868424368fa946
           </TouchableOpacity>
         </View>
       </View>
