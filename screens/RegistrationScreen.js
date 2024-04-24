@@ -46,7 +46,7 @@ const RegistrationScreen = () => {
       if (response.status === 201) {
         const message = response.data.message;
         Alert.alert('Success', message);
-        navigation.navigate('SearchCustomerScreen');
+        navigation.navigate('Home');
       } else {
         console.log('Failed to create user:', response.data);
         Alert.alert('Error', 'Failed to create response');

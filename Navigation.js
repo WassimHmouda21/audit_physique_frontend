@@ -13,6 +13,7 @@ import ReponseScreen from './screens/ReponseScreen';
 import SearchCustomerScreen from './screens/SearchCustomerScreen';
 import CameraApp from './screens/camera';
 import RegistrationScreen from './screens/RegistrationScreen';
+import CreateCustomer from './screens/CreateCustomer';
 const Stack = createStackNavigator();
 
 const Navigation = () => {
@@ -30,6 +31,7 @@ const Navigation = () => {
         <Stack.Screen name="ReponseScreen" component={ReponseScreen} />
         <Stack.Screen name="SearchCustomerScreen" component={SearchCustomerScreen} />
         <Stack.Screen name="CameraScreen" component={CameraApp} />
+        <Stack.Screen name="CreateCustomer" component={CreateCustomer} />
       </Stack.Navigator>
     </NavigationContainer>
   );

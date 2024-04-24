@@ -56,7 +56,7 @@ const HomeScreen = () => {
   console.log('Total Projects:', totalProjects);
 
   const handleMissingInspectionsPress = () => {
-    navigation.navigate('SearchCustomerScreen');
+    navigation.navigate('CreateCustomer');
   };
 
   const handleMissingInspectionsPresse = () => {
