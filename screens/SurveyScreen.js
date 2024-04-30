@@ -44,8 +44,8 @@ const SurveyScreen = ({ route }) => {
   const handletheMissingInspectionsPress = () => {
     console.log('Button pressed');
     // Implement navigation logic
-    navigation.navigate('SitesScreen', { customerId: customer.id });
-
+    navigation.navigate('CreateProject', { customerId: customer.id });
+  
   };
   const handleSortByYear = () => {
     const sorted = [...projects]; // Copy projects array
@@ -86,7 +86,7 @@ const SurveyScreen = ({ route }) => {
                 <Text style={styles.detailValue}>{customer.SN}</Text>
               </View>
             </View>
-            <CustomButton title="Join new Survey Project" onPress={handletheMissingInspectionsPress} />
+            <CustomButton title="Create a new Project" onPress={handletheMissingInspectionsPress} />
           </View>
           <CustomButton
                 title={sortByYear ? 'Sort Ascending' : 'Sort Descending'}

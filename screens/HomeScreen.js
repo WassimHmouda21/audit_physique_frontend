@@ -87,7 +87,7 @@ const HomeScreen = () => {
       </View>
       <View style={styles.blankSpace} />
       <View style={[styles.bottomContent, { marginTop: 0, justifyContent: 'center' }]}>
-        <CustomButton title="audit physique à faire" onPress={handleMissingInspectionsPress} />
+        <CustomButton title="create a new customer" onPress={handleMissingInspectionsPress} />
         <View style={{ marginVertical: 10 }}></View>
         <Image source={require('../assets/images/smart_skills.jpg')} style={{ width: 350, height: 200 }} />
       </View>
