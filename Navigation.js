@@ -17,6 +17,7 @@ import CreateCustomer from './screens/CreateCustomer';
 import CreateProject from './screens/CreateProject';
 import CreateSite from './screens/CreateSite';
 import CreateCategorie from './screens/CreateCategorie';
+import CreateQuestion from './screens/CreateQuestion';
 const Stack = createStackNavigator();
 
 const Navigation = () => {
@@ -38,6 +39,7 @@ const Navigation = () => {
         <Stack.Screen name="CreateProject" component={CreateProject} />
         <Stack.Screen name="CreateSite" component={CreateSite} />
         <Stack.Screen name="CreateCategorie" component={CreateCategorie} />
+        <Stack.Screen name="CreateQuestion" component={CreateQuestion} />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -20,7 +20,7 @@ const CreateCategorie = ({ route }) => {
     console.log("Categorie :", categorie);
     // Navigate to CategoryScreen and pass the site ID as a parameter
     console.log("Navigating to QuestionScreen with category ID:", categorie.id);
-    navigation.navigate('QuestionScreen', { categoryId: categorie.id, siteId: siteId ,ProjetId: ProjetId });
+    navigation.navigate('CreateQuestion', { categoryId: categorie.id});
   };
 
   const [categorieData, setCategorieSiteData] = useState({
