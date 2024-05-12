@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet ,Button ,TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet ,Button ,TouchableOpacity,ScrollView } from 'react-native';
 import CustomHeader from '../components/CustomHeader';
 import axios from 'axios';
 import { useNavigation, useFocusEffect } from '@react-navigation/native'; // Import useFocusEffect
@@ -83,6 +83,7 @@ const ProgressionScreen = () => {
       <View style={styles.cardsContainer}>
         <View style={styles.cardContent}>
           <Text style={styles.detailLabell}>Progression History</Text>
+          <ScrollView style={styles.scrollView}>
           <Text style={styles.detailLabel}>These are done projects</Text>
           {projects.length > 0 ? (
             projects.map((project) => (
@@ -117,13 +118,17 @@ const ProgressionScreen = () => {
           ) : (
             <Text>No projects available</Text>
           )}
+              </ScrollView>
                  <TouchableOpacity onPress={handleReclamationButtonPress} style={styles.button}>
 
             <Text style={styles.buttonText}>Send email Reclamation</Text>
 
           </TouchableOpacity>
+      
         </View>
+        <View style={styles.blankSpace} />
       </View>
+    
       <View style={styles.footer}>
         <CustomHeader />
       </View>
@@ -145,6 +150,11 @@ const styles = StyleSheet.create({
   cardContent: {
     flex: 1,
     margin: 10, 
+  },
+  blankSpace: {
+    height: 5,
+    flex: 0.1,
+    bottom: 1,
   },
   button: {
     marginTop: 20,
