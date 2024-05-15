@@ -4,7 +4,7 @@ import axios from 'axios';
 import filter from "lodash.filter";
 import { useNavigation, useRoute } from '@react-navigation/native';
 import CustomHeader from '../components/CustomHeader';
-const API_ENDPOINT = 'http://10.0.2.2:8000/api/customerpage';
+const API_ENDPOINT = `http://10.0.2.2:8000/api/customerpage/${user_id}`;
 
 const SearchCustomerScreen = () => {
   const [isLoading, setIsLoading] = useState(false);

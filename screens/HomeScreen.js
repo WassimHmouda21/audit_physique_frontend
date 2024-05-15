@@ -1,20 +1,26 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
-import CustomHeader from '../components/CustomHeader'; // Update the path
+import CustomHeader from '../components/CustomHeader';
 import CustomButton from '../components/CustomButton';
-import { useNavigation, useFocusEffect } from '@react-navigation/native'; // Import useFocusEffect
+import { useNavigation, useFocusEffect, useRoute } from '@react-navigation/native';
 import axios from 'axios';
-import { useRoute } from '@react-navigation/native';
+import { UserContext } from '../context/UserContext';
+
 const HomeScreen = () => {
+  const { user_id, setUserId } = useContext(UserContext); 
   const [date, setDate] = useState(new Date());
   const [undoneProjects, setUndoneProjects] = useState(13);
   const [doneProjects, setDoneProjects] = useState(4);
   const [totalProjects, setTotalSurveys] = useState([]);
   const route = useRoute();
-  const { user_id } = route.params;
   const navigation = useNavigation();
 
-  // Use useFocusEffect instead of useEffect
+  useEffect(() => {
+    if (route.params && route.params.user_id) {
+      setUserId(route.params.user_id);
+    }
+  }, [route.params, setUserId]);
+  
   useFocusEffect(
     React.useCallback(() => {
       async function fetchData() {
@@ -49,27 +55,21 @@ const HomeScreen = () => {
 
       fetchData();
 
-      // Clean up function
       return () => {};
-    }, []) // Empty dependency array to run only on mount
+    }, [])
   );
 
   console.log('Total Projects:', totalProjects);
 
   const handleMissingInspectionsPress = () => {
     console.log("User ID:", user_id);
-  
-    navigation.navigate('CreateCustomer', { user_id :user_id});
-  };
-
-  const handleMissingInspectionsPresse = () => {
-    // Implement logic for handling Missing Inspections button press
+    navigation.navigate('CreateCustomer', { user_id });
   };
 
   return (
     <View style={styles.container}>
-     <CustomHeader user_id={user_id} />
-     <View style={styles.content}>
+      <CustomHeader user_id={user_id} />
+      <View style={styles.content}>
         <View style={styles.card}>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Image source={require('../assets/images/image_date_picker.png')} style={styles.logo} />

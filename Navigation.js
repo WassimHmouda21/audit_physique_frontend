@@ -2,6 +2,7 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { UserProvider } from './context/UserContext';
 import HomeScreen from './screens/HomeScreen';
 import SurveyScreen from './screens/SurveyScreen';
 import AlbumScreen from './screens/AlbumScreen';
@@ -23,6 +24,7 @@ const Stack = createStackNavigator();
 
 const Navigation = () => {
   return (
+    <UserProvider>
     <NavigationContainer>
       <Stack.Navigator>
       <Stack.Screen name="LoginScreen" component={LoginScreen} />
@@ -44,6 +46,7 @@ const Navigation = () => {
         <Stack.Screen name="CreateQuestion" component={CreateQuestion} />
       </Stack.Navigator>
     </NavigationContainer>
+    </UserProvider>
   );
 };
 

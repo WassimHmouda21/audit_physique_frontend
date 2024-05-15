@@ -7,10 +7,12 @@ import { useNavigation } from '@react-navigation/native';
 const CategoryScreen = ({ route }) => {
   const [categories, setCategories] = useState([]);
   const [customerSiteStructure, setCustomerSiteStructure] = useState('');
-  const { siteId,customerId ,ProjetId } = route.params;
+  const { siteId,customerId ,ProjetId, user_id } = route.params;
   const [customer, setCustomer] = useState(null);
   const navigation = useNavigation();
 
+
+  
   class Categorie {
     constructor(id, Nom) {
       this.id = id;
@@ -99,7 +101,7 @@ const CategoryScreen = ({ route }) => {
       </ScrollView>
 
       <View style={styles.footer}>
-        <CustomHeader />
+         <CustomHeader user_id={user_id} />
       </View>
     </View>
   );

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Image, StatusBar ,TouchableOpacity,ScrollView} from 'react-native';
 import axios from 'axios';
+import CustomHeader from '../components/CustomHeader';
 import CustomButton from '../components/CustomButton';
 import { useNavigation } from '@react-navigation/native';
 const SurveyScreen = ({ route }) => {
@@ -9,7 +10,9 @@ const SurveyScreen = ({ route }) => {
   const navigation = useNavigation();
   const [sortedProjects, setSortedProjects] = useState([]);
   const [sortByYear, setSortByYear] = useState(false);
-  const { customerId } = route.params;
+  const { customerId , user_id } = route.params;
+
+
 
   useEffect(() => {
     async function fetchCustomer() {
@@ -121,6 +124,9 @@ const SurveyScreen = ({ route }) => {
       )}
      
       <StatusBar style="auto" />
+      <View style={styles.footer}>
+         <CustomHeader user_id={user_id} />
+      </View>
     </View>
   );
 };
@@ -131,6 +137,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingTop: 20,
+  },
+  footer: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
   },
   logoContainer: {
     alignItems: 'center',

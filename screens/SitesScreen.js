@@ -15,7 +15,7 @@ class Customer_site {
 }
 
 const SitesScreen = ({ route, navigation }) => {
-  const { ProjetId, customerId } = route.params;
+  const { ProjetId, customerId ,user_id} = route.params;
   const [customerSites, setCustomerSites] = useState([]);
   const [customer, setCustomer] = useState(null);
   const [project, setProject] = useState(null);
@@ -149,7 +149,7 @@ const SitesScreen = ({ route, navigation }) => {
       
       <StatusBar style="auto" />
       <View style={styles.footer}>
-        <CustomHeader />
+        <CustomHeader user_id={user_id} />
       </View>
     </View>
   );

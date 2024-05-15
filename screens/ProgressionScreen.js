@@ -2,13 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet ,Button ,TouchableOpacity,ScrollView } from 'react-native';
 import CustomHeader from '../components/CustomHeader';
 import axios from 'axios';
-import { useNavigation, useFocusEffect } from '@react-navigation/native'; // Import useFocusEffect
-const ProgressionScreen = () => {
+import { useNavigation, useFocusEffect, useRoute} from '@react-navigation/native'; // Import useFocusEffect
+const ProgressionScreen = ({ route }) =>  {
   const [projects, setProjects] = useState([]);
   const [project, setProject] = useState([]);
-
   const navigation = useNavigation();
+   // Use useRoute to access route params
+  const { user_id } = route.params; 
 
+
+  
   // Use useFocusEffect instead of useEffect
   useFocusEffect(
     React.useCallback(() => {
@@ -130,7 +133,7 @@ const ProgressionScreen = () => {
       </View>
     
       <View style={styles.footer}>
-        <CustomHeader />
+      <CustomHeader user_id={user_id} />
       </View>
     </View>
   );

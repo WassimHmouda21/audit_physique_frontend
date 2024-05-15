@@ -2,9 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Image, FlatList ,StatusBar } from 'react-native';
 import axios from 'axios';
 import CustomHeader from '../components/CustomHeader';
+import { useNavigation, useRoute} from '@react-navigation/native'; 
 const AlbumScreen = () => {
   const [images, setImages] = useState([]);
-
+  const navigation = useNavigation();
+  const route = useRoute(); // Use useRoute to access route params
+  const { user_id } = route.params; 
   useEffect(() => {
     async function fetchImages() {
       try {
@@ -48,7 +51,7 @@ const AlbumScreen = () => {
       )}
       <StatusBar style="auto" />
       <View style={styles.footer}>
-        <CustomHeader />
+      <CustomHeader user_id={user_id} />
       </View>
     </View>
   );

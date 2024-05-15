@@ -2,23 +2,23 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
-const CustomHeader = ({ user_id }) => { // Accept user_id as a prop
+const CustomHeader = ({ user_id }) => {
   const navigation = useNavigation();
 
   const handleNavigateToHome = () => {
-    navigation.navigate('Home');
+    navigation.navigate('Home', { user_id });
   };
 
   const handleNavigateToSurvey = () => {
-    navigation.navigate('SearchCustomerScreen', { user_id: user_id }); // Pass user_id when navigating to SearchCustomerScreen
+    navigation.navigate('SearchCustomerScreen', { user_id });
   };
 
   const handleNavigateToAlbum = () => {
-    navigation.navigate('Album');
+    navigation.navigate('Album', { user_id });
   };
 
   const handleNavigateToProgression = () => {
-    navigation.navigate('Progression');
+    navigation.navigate('Progression', { user_id });
   };
 
   return (
@@ -37,7 +37,8 @@ const CustomHeader = ({ user_id }) => { // Accept user_id as a prop
       </TouchableOpacity>
     </View>
   );
-};  
+};
+
 
 const styles = StyleSheet.create({
   container: {
