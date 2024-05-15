@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, StatusBar, Image, ScrollView } from 'react-native';
 import CustomHeader from '../components/CustomHeader';
 import axios from 'axios';
+import { Project } from './HomeScreen';
 
 class Customer_site {
   constructor(id, Numero_site, Structure, Lieu, Customer_Id) {
@@ -10,22 +11,6 @@ class Customer_site {
     this.Structure = Structure;
     this.Lieu = Lieu;
     this.Customer_Id = Customer_Id;
-  }
-}
-
-class Project {
-  constructor(id, Nom, URL, Description, customer_id, year, QualityChecked, QualityCheckedDateTime, QualityCheckedMessage, Preuve, is_submitted) {
-    this.id = id;
-    this.Nom = Nom;
-    this.URL = URL;
-    this.Description = Description;
-    this.customer_id = customer_id;
-    this.year = year;
-    this.QualityChecked = QualityChecked;
-    this.QualityCheckedDateTime = QualityCheckedDateTime;
-    this.QualityCheckedMessage = QualityCheckedMessage;
-    this.Preuve = Preuve;
-    this.is_submitted = is_submitted;
   }
 }
 

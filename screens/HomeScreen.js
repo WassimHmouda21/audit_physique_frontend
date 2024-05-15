@@ -4,13 +4,14 @@ import CustomHeader from '../components/CustomHeader'; // Update the path
 import CustomButton from '../components/CustomButton';
 import { useNavigation, useFocusEffect } from '@react-navigation/native'; // Import useFocusEffect
 import axios from 'axios';
-
+import { useRoute } from '@react-navigation/native';
 const HomeScreen = () => {
   const [date, setDate] = useState(new Date());
   const [undoneProjects, setUndoneProjects] = useState(13);
   const [doneProjects, setDoneProjects] = useState(4);
   const [totalProjects, setTotalSurveys] = useState([]);
-
+  const route = useRoute();
+  const { user_id } = route.params;
   const navigation = useNavigation();
 
   // Use useFocusEffect instead of useEffect
@@ -56,7 +57,9 @@ const HomeScreen = () => {
   console.log('Total Projects:', totalProjects);
 
   const handleMissingInspectionsPress = () => {
-    navigation.navigate('CreateCustomer');
+    console.log("User ID:", user_id);
+  
+    navigation.navigate('CreateCustomer', { user_id :user_id});
   };
 
   const handleMissingInspectionsPresse = () => {
@@ -65,8 +68,8 @@ const HomeScreen = () => {
 
   return (
     <View style={styles.container}>
-      <CustomHeader />
-      <View style={styles.content}>
+     <CustomHeader user_id={user_id} />
+     <View style={styles.content}>
         <View style={styles.card}>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Image source={require('../assets/images/image_date_picker.png')} style={styles.logo} />
@@ -172,3 +175,18 @@ const styles = StyleSheet.create({
 });
 
 export default HomeScreen;
+export class Project {
+  constructor(id, Nom, URL, Description, customer_id, year, QualityChecked, QualityCheckedDateTime, QualityCheckedMessage, Preuve, is_submitted) {
+    this.id = id;
+    this.Nom = Nom;
+    this.URL = URL;
+    this.Description = Description;
+    this.customer_id = customer_id;
+    this.year = year;
+    this.QualityChecked = QualityChecked;
+    this.QualityCheckedDateTime = QualityCheckedDateTime;
+    this.QualityCheckedMessage = QualityCheckedMessage;
+    this.Preuve = Preuve;
+    this.is_submitted = is_submitted;
+  }
+}

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, SafeAreaView, TextInput, StyleSheet,StatusBar, FlatList, ActivityIndicator, Image ,TouchableOpacity} from 'react-native';
 import axios from 'axios';
 import filter from "lodash.filter";
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import CustomHeader from '../components/CustomHeader';
 const API_ENDPOINT = 'http://10.0.2.2:8000/api/customerpage';
 
@@ -14,6 +14,8 @@ const SearchCustomerScreen = () => {
   const [showHeader, setShowHeader] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const navigation = useNavigation();
+  const route = useRoute(); // Use useRoute to access route params
+  const { user_id } = route.params; 
   useEffect(() => {
     setIsLoading(true);
     fetchData(API_ENDPOINT);
@@ -26,7 +28,7 @@ const SearchCustomerScreen = () => {
   };
   const fetchData = async (url) => {
     try {
-      const response = await axios.get('http://10.0.2.2:8000/api/customerpage');
+      const response = await axios.get(`http://10.0.2.2:8000/api/customerpage/${user_id}`);
       console.log(response.data);
       setCustomers(response.data.customers); 
       setFullData(response.data.customers); // Update fullData state
@@ -136,7 +138,7 @@ const SearchCustomerScreen = () => {
     {showHeader && (
         <View style={styles.footer}>
           {/* Your footer content here */}
-          <CustomHeader />
+          <CustomHeader user_id={user_id} />
         </View>
       )}
     </View>
