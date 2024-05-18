@@ -18,12 +18,14 @@ import CreateProject from './screens/CreateProject';
 import CreateSite from './screens/CreateSite';
 import CreateCategorie from './screens/CreateCategorie';
 import CreateQuestion from './screens/CreateQuestion';
+import LoginScreen from './screens/LoginScreen';
 const Stack = createStackNavigator();
 
 const Navigation = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator>
+      <Stack.Screen name="LoginScreen" component={LoginScreen} />
         <Stack.Screen name="RegistrationScreen" component={RegistrationScreen} />
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="Survey" component={SurveyScreen} />

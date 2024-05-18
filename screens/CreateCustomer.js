@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Button, Text, Image, TextInput } from 'react-native'; // Import Image and TextInput components
 import { launchImageLibrary } from 'react-native-image-picker';
 import axios from 'axios';
-
+import { useRoute, useNavigation } from '@react-navigation/native';
 const CreateCustomer = () => {
   const [SN, setSN] = useState('');
   const [LN, setLN] = useState('');
@@ -17,7 +17,9 @@ const CreateCustomer = () => {
   const [Type, setType] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null); // State to store error message
-
+  const route = useRoute();
+  const { user_id } = route.params;
+  const navigation = useNavigation();
   const createCustomer = async () => {
     try {
       setLoading(true);
@@ -40,7 +42,7 @@ const CreateCustomer = () => {
       formData.append('Network_Design', Network_Design);
       formData.append('Type', Type);
 
-      const response = await axios.post('http://10.0.2.2:8000/api/addImage', formData, {
+      const response = await axios.post(`http://10.0.2.2:8000/api/addImage/${user_id}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

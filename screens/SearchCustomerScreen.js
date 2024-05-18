@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, SafeAreaView, TextInput, StyleSheet,StatusBar, FlatList, ActivityIndicator, Image ,TouchableOpacity} from 'react-native';
+import { View, Text, SafeAreaView, TextInput, StyleSheet, StatusBar, FlatList, ActivityIndicator, Image, TouchableOpacity } from 'react-native';
 import axios from 'axios';
 import filter from "lodash.filter";
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import CustomHeader from '../components/CustomHeader';
-const API_ENDPOINT = 'http://10.0.2.2:8000/api/customerpage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SearchCustomerScreen = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -13,20 +13,45 @@ const SearchCustomerScreen = () => {
   const [error, setError] = useState(null);
   const [showHeader, setShowHeader] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
+  const route = useRoute();
   const navigation = useNavigation();
+  const [user_id, setUser_id] = useState(null);
+
   useEffect(() => {
-    setIsLoading(true);
-    fetchData(API_ENDPOINT);
+    const getUser_id = async () => {
+      try {
+        const user_id = await AsyncStorage.getItem('user_id');
+        setUser_id(user_id);
+        console.log('Retrieved User ID:', user_id);
+      } catch (error) {
+        console.error('Error retrieving user ID:', error);
+      }
+    };
+    
+    getUser_id();
   }, []);
 
+  useEffect(() => {
+    console.log("User ID****:", user_id);
+  }, [user_id]);
+  
+  useEffect(() => {
+    if (user_id) {
+      setIsLoading(true);
+      fetchData(); // Call fetchData only when user_id is not null
+    }
+  }, [user_id]);
+
+  const API_ENDPOINT = `http://10.0.2.2:8000/api/customerpage/${user_id}`; // Declare API_ENDPOINT after user_id is set
 
   const navigateToSurvey = (customerId) => {
     console.log("Customer ID:", customerId);
     navigation.navigate('Survey', { customerId: customerId });
   };
-  const fetchData = async (url) => {
+
+  const fetchData = async () => { // Remove the url parameter here
     try {
-      const response = await axios.get('http://10.0.2.2:8000/api/customerpage');
+      const response = await axios.get(API_ENDPOINT); // Use API_ENDPOINT directly
       console.log(response.data);
       setCustomers(response.data.customers); 
       setFullData(response.data.customers); // Update fullData state
@@ -73,7 +98,7 @@ const SearchCustomerScreen = () => {
       </View>
     );
   }
-
+  
   return (
     <View style={{ flex: 1 }}>
     <StatusBar style="auto" />

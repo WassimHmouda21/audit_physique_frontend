@@ -1,19 +1,38 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
-import CustomHeader from '../components/CustomHeader'; // Update the path
+import CustomHeader from '../components/CustomHeader';
 import CustomButton from '../components/CustomButton';
-import { useNavigation, useFocusEffect } from '@react-navigation/native'; // Import useFocusEffect
+import { useNavigation, useFocusEffect, useRoute } from '@react-navigation/native';
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const HomeScreen = () => {
+const HomeScreen = ({ route }) => {
+ 
   const [date, setDate] = useState(new Date());
   const [undoneProjects, setUndoneProjects] = useState(13);
   const [doneProjects, setDoneProjects] = useState(4);
   const [totalProjects, setTotalSurveys] = useState([]);
-
   const navigation = useNavigation();
+  const [user_id, setUser_id] = useState(null);
 
-  // Use useFocusEffect instead of useEffect
+  useEffect(() => {
+    const getUser_id = async () => {
+      try {
+        const user_id = await AsyncStorage.getItem('user_id');
+        setUser_id(user_id);
+        console.log('Retrieved User ID:', user_id);
+      } catch (error) {
+        console.error('Error retrieving user ID:', error);
+      }
+    };
+    
+    getUser_id();
+  }, []);
+
+  useEffect(() => {
+    console.log("User ID********:", user_id);
+  }, [user_id]);
+  
   useFocusEffect(
     React.useCallback(() => {
       async function fetchData() {
@@ -48,24 +67,25 @@ const HomeScreen = () => {
 
       fetchData();
 
-      // Clean up function
       return () => {};
-    }, []) // Empty dependency array to run only on mount
+    }, [])
   );
 
   console.log('Total Projects:', totalProjects);
 
   const handleMissingInspectionsPress = () => {
-    navigation.navigate('CreateCustomer');
+    console.log("User ID:", user_id);
+    navigation.navigate('CreateCustomer', { user_id });
   };
 
-  const handleMissingInspectionsPresse = () => {
-    // Implement logic for handling Missing Inspections button press
+  const handleMissingInspectionsPresser = () => {
+    console.log("User ID:", user_id);
+    navigation.navigate('SearchCustomerScreen', { user_id });
   };
 
   return (
     <View style={styles.container}>
-      <CustomHeader />
+      <CustomHeader  />
       <View style={styles.content}>
         <View style={styles.card}>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -83,7 +103,7 @@ const HomeScreen = () => {
       </View>
 
       <View style={[styles.bottomContent, { marginTop: 0, justifyContent: 'center' }]}>
-        <CustomButton title="audit physique en cours" onPress={handleMissingInspectionsPress} />
+        <CustomButton title="audit physique en cours" onPress={handleMissingInspectionsPresser} />
       </View>
       <View style={styles.blankSpace} />
       <View style={[styles.bottomContent, { marginTop: 0, justifyContent: 'center' }]}>
@@ -172,3 +192,18 @@ const styles = StyleSheet.create({
 });
 
 export default HomeScreen;
+export class Project {
+  constructor(id, Nom, URL, Description, customer_id, year, QualityChecked, QualityCheckedDateTime, QualityCheckedMessage, Preuve, is_submitted) {
+    this.id = id;
+    this.Nom = Nom;
+    this.URL = URL;
+    this.Description = Description;
+    this.customer_id = customer_id;
+    this.year = year;
+    this.QualityChecked = QualityChecked;
+    this.QualityCheckedDateTime = QualityCheckedDateTime;
+    this.QualityCheckedMessage = QualityCheckedMessage;
+    this.Preuve = Preuve;
+    this.is_submitted = is_submitted;
+  }
+}

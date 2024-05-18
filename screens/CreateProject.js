@@ -13,7 +13,7 @@ const CreateProject = ({ route }) => {
         URL: '',
         Description: '',
         year: '',
-        QualityChecked: 0,
+        QualityChecked: 1,
         QualityCheckedDateTime: '',
         QualityCheckedMessage: '',
         Preuve: '',
@@ -79,11 +79,11 @@ const CreateProject = ({ route }) => {
                 value={projectData.year}
                 onChangeText={text => handleInputChange('year', text)}
             />
-            <TextInput
+            {/* <TextInput
     placeholder="QualityChecked"
     value={projectData.QualityChecked.toString()} // Convert to string explicitly
     onChangeText={text => handleInputChange('QualityChecked', text)}
-/>
+/> */}
 
             <TextInput
                 placeholder="QualityCheckedDateTime"
