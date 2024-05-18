@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, TextInput, Button, Alert, StyleSheet } from 'react-native';
+import { View, TextInput, Button, Alert, StyleSheet,Text  } from 'react-native';
 import axios from 'axios';
 import { useNavigation, useFocusEffect } from '@react-navigation/native'; 
 const RegistrationScreen = () => {
@@ -10,6 +10,7 @@ const RegistrationScreen = () => {
   const [address, setAddress] = useState('');
   const [role, setRole] = useState(''); // Added role state
   const [isEmailVerified, setIsEmailVerified] = useState('');
+  const [emailError, setEmailError] = useState('');
   const navigation = useNavigation();
   useEffect(() => {
     console.log('Registration screen mounted');
@@ -56,6 +57,11 @@ const RegistrationScreen = () => {
       Alert.alert('Error', 'Failed to create response');
     }
   };
+
+  const validateEmail = (email) => {
+    const emailRegex = /^[A-Za-z0-9._%+-]+@SmartSkills\.tn$/;
+    return emailRegex.test(email) && email.length <= 24;
+  };
   
   return (
     <View style={styles.container}>
@@ -65,12 +71,22 @@ const RegistrationScreen = () => {
         value={name}
         onChangeText={(text) => setName(text)}
       />
-      <TextInput
+      {/* <TextInput
         style={styles.input}
         placeholder="Enter Email"
         value={email}
         onChangeText={(text) => setEmail(text)}
+      /> */}
+       <TextInput
+        style={styles.input}
+        placeholder="Enter Email"
+        value={email}
+        onChangeText={(text) => {
+          setEmail(text);
+          setEmailError(validateEmail(text) ? '' : 'Invalid email format');
+        }}
       />
+      {emailError ? <Text style={styles.error}>{emailError}</Text> : null}
       <TextInput
         style={styles.input}
         placeholder="Password"
@@ -119,6 +135,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: 10,
     paddingHorizontal: 10,
+  },
+  error: {
+    color: 'red',
   },
 });
 

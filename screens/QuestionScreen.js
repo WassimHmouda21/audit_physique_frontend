@@ -33,7 +33,7 @@ const QuestionScreen = ({ route }) => {
   const [customerSiteStructure, setCustomerSiteStructure] = useState('');
   const [categorieStructure, setCategorieStructure] = useState('');
   const [reponses, setReponses] = useState([]);
-  const { categoryId, siteId ,ProjetId } = route.params;
+  const { categoryId, siteId ,user_id ,ProjetId } = route.params;
   const [site, setSite] = useState(siteId);
   const navigation = useNavigation();
   const [selectedValue, setSelectedValue] = useState('on');
@@ -391,7 +391,7 @@ const QuestionScreen = ({ route }) => {
       <Button onPress={() => navigation.goBack()} title="Close" />
 
       <View style={styles.footer}>
-        <CustomHeader />
+      <CustomHeader user_id={user_id} />
       </View>
     </ScrollView>
   );

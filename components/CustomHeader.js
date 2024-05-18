@@ -1,25 +1,24 @@
-// CustomHeader.js
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
-const CustomHeader = () => {
+const CustomHeader = ({ user_id }) => {
   const navigation = useNavigation();
 
   const handleNavigateToHome = () => {
-    navigation.navigate('Home');
+    navigation.navigate('Home', { user_id });
   };
 
   const handleNavigateToSurvey = () => {
-    navigation.navigate('SearchCustomerScreen');
+    navigation.navigate('SearchCustomerScreen', { user_id });
   };
 
   const handleNavigateToAlbum = () => {
-    navigation.navigate('Album');
+    navigation.navigate('Album', { user_id });
   };
 
   const handleNavigateToProgression = () => {
-    navigation.navigate('Progression');
+    navigation.navigate('Progression', { user_id });
   };
 
   return (
@@ -39,6 +38,7 @@ const CustomHeader = () => {
     </View>
   );
 };
+
 
 const styles = StyleSheet.create({
   container: {

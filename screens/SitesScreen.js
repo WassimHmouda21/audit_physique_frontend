@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, StatusBar, Image, ScrollView } from 'react-native';
 import CustomHeader from '../components/CustomHeader';
 import axios from 'axios';
+import { Project } from './HomeScreen';
 
 class Customer_site {
   constructor(id, Numero_site, Structure, Lieu, Customer_Id) {
@@ -13,24 +14,8 @@ class Customer_site {
   }
 }
 
-class Project {
-  constructor(id, Nom, URL, Description, customer_id, year, QualityChecked, QualityCheckedDateTime, QualityCheckedMessage, Preuve, is_submitted) {
-    this.id = id;
-    this.Nom = Nom;
-    this.URL = URL;
-    this.Description = Description;
-    this.customer_id = customer_id;
-    this.year = year;
-    this.QualityChecked = QualityChecked;
-    this.QualityCheckedDateTime = QualityCheckedDateTime;
-    this.QualityCheckedMessage = QualityCheckedMessage;
-    this.Preuve = Preuve;
-    this.is_submitted = is_submitted;
-  }
-}
-
 const SitesScreen = ({ route, navigation }) => {
-  const { ProjetId, customerId } = route.params;
+  const { ProjetId, customerId ,user_id} = route.params;
   const [customerSites, setCustomerSites] = useState([]);
   const [customer, setCustomer] = useState(null);
   const [project, setProject] = useState(null);
@@ -164,7 +149,7 @@ const SitesScreen = ({ route, navigation }) => {
       
       <StatusBar style="auto" />
       <View style={styles.footer}>
-        <CustomHeader />
+        <CustomHeader user_id={user_id} />
       </View>
     </View>
   );

@@ -161,7 +161,7 @@ const SearchCustomerScreen = () => {
     {showHeader && (
         <View style={styles.footer}>
           {/* Your footer content here */}
-          <CustomHeader />
+          <CustomHeader user_id={user_id} />
         </View>
       )}
     </View>
