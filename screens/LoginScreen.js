@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, TextInput, Button, Alert, StyleSheet, Text } from 'react-native';
+import { View, TextInput, Button, Alert,TouchableOpacity, StyleSheet, Text } from 'react-native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage
 import { useNavigation } from '@react-navigation/native';
@@ -64,7 +64,12 @@ const LoginScreen = () => {
         placeholder="Enter your password"
         secureTextEntry
       />
+      <View style={styles.buttonContainer}>
       <Button title="Login" onPress={handleLogin} />
+      </View>
+      <TouchableOpacity onPress={() => navigation.navigate('RegistrationScreen')}>
+        <Text style={styles.registerLink}>you don't have an account yet ?   Register here</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -79,6 +84,16 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 16,
     marginBottom: 5,
+  },
+  registerLink: {
+    marginTop: 16,
+    color: 'blue',
+    textAlign: 'center',
+    textDecorationLine: 'underline',
+  },
+  buttonContainer: {
+    width: '100%',
+    marginTop: 10,
   },
   input: {
     width: '100%',
