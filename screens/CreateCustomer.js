@@ -17,6 +17,9 @@ const CreateCustomer = () => {
   const [Type, setType] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null); // State to store error message
+  const [siteWebError, setSiteWebError] = useState(''); // Added state for Site_Web error
+  const [adresseMailError, setAdresseMailError] = useState(''); // Added state for Adresse_mail error
+
   const route = useRoute();
   const { user_id } = route.params;
   const navigation = useNavigation();
@@ -67,7 +70,36 @@ const CreateCustomer = () => {
     });
   };
   
+  const validateSiteWeb = (text) => {
+    if (!text.startsWith('http')) {
+      setSiteWebError('Site web must start with http');
+    } else {
+      setSiteWebError('');
+    }
+    setSite_Web(text);
+  };
+
+  const validateAdresseMail = (text) => {
+    // Check if email contains "@" symbol
+    const hasAtSymbol = /@/.test(text);
+    // Check if email length is between 8 and 24 characters
+    const lengthValid = text.length >= 8 && text.length <= 24;
+    // Check for uppercase, lowercase, and number
+    const hasUppercase = /[A-Z]/.test(text);
+    const hasLowercase = /[a-z]/.test(text);
+    const hasNumber = /\d/.test(text);
   
+    if (!hasAtSymbol || !lengthValid || !hasUppercase || !hasLowercase || !hasNumber) {
+      setAdresseMailError('Adresse mail must have uppercase, lowercase letters, numbers, be between 8-24 characters long, and contain an "@" symbol');
+    } else {
+      setAdresseMailError('');
+    }
+    
+    setAdresse_mail(text);
+  };
+  
+  
+
   return (
     <View style={{ flex: 1, backgroundColor: 'white', padding: 15 }}>
       {/* Render error message if present */}
@@ -109,17 +141,19 @@ const CreateCustomer = () => {
     value={Categorie}
 />
 <TextInput
-    style={{ height: 40, borderColor: 'gray', borderWidth: 1, marginBottom: 10 }}
-    placeholder="Site_Web"
-    onChangeText={text => setSite_Web(text)}
-    value={Site_Web}
-/>
-<TextInput
-    style={{ height: 40, borderColor: 'gray', borderWidth: 1, marginBottom: 10 }}
-    placeholder="Adresse_mail"
-    onChangeText={text => setAdresse_mail(text)}
-    value={Adresse_mail}
-/>
+        style={{ height: 40, borderColor: 'gray', borderWidth: 1, marginBottom: 10 }}
+        placeholder="Site_Web"
+        onChangeText={text => validateSiteWeb(text)}
+        value={Site_Web}
+      />
+      {siteWebError ? <Text style={{ color: 'red' }}>{siteWebError}</Text> : null}
+      <TextInput
+        style={{ height: 40, borderColor: 'gray', borderWidth: 1, marginBottom: 10 }}
+        placeholder="Adresse_mail"
+        onChangeText={text => validateAdresseMail(text)}
+        value={Adresse_mail}
+      />
+      {adresseMailError ? <Text style={{ color: 'red' }}>{adresseMailError}</Text> : null}
 <TextInput
     style={{ height: 40, borderColor: 'gray', borderWidth: 1, marginBottom: 10 }}
     placeholder="Organigramme"
