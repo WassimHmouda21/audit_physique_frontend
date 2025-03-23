@@ -1,4 +1,4 @@
-# auditphysique_frontend
+## auditphysique_frontend
 
 The Physique Audit Mobile Application is designed for auditors to visit customer sites, capture photos of tools, and respond to audits efficiently. The app includes key functionalities such as a built-in camera, an audit form, audit history, a photos album, and a complaint email system.
 
