@@ -1,32 +1,28 @@
-**auditphysique_frontend
+# auditphysique_frontend
+
 The Physique Audit Mobile Application is designed for auditors to visit customer sites, capture photos of tools, and respond to audits efficiently. The app includes key functionalities such as a built-in camera, an audit form, audit history, a photos album, and a complaint email system.
 
-***Features
--Photo Capture – Take real-time photos of tools and equipment.
+## Features
 
--Physical Audit Form – Fill out and submit audit details.
+- Photo Capture – Take real-time photos of tools and equipment.
+- Physical Audit Form – Fill out and submit audit details.
+- Audit History – View past audits for reference.
+- Photo Album – Store and manage audit images.
+- Complaint Email – Send audit-related complaints via email.
 
--Audit History – View past audits for reference.
+## Tech Stack
 
--Photo Album – Store and manage audit images.
-
--Complaint Email – Send audit-related complaints via email.
-
-***Tech Stack
-***Frontend:
+### Frontend
 
 React Native (JavaScript)
 
-***Backend:
+### Backend
 
-Laravel (PHP Framework)
-
-MySQL (Database)
-
+Laravel (PHP Framework)  
+MySQL (Database)  
 XAMPP (Local Development Server)
 
-API Communication:
+### API Communication
 
-RESTful APIs (built with Laravel)
-
+RESTful APIs (built with Laravel)  
 Axios for HTTP requests in React Native
